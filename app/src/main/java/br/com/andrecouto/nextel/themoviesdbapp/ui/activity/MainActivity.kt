@@ -7,6 +7,7 @@ import br.com.andrecouto.nextel.themoviesdbapp.App
 import br.com.andrecouto.nextel.themoviesdbapp.R
 import br.com.andrecouto.nextel.themoviesdbapp.data.component.DaggerMainScreenComponent
 import br.com.andrecouto.nextel.themoviesdbapp.data.model.Movie
+import br.com.andrecouto.nextel.themoviesdbapp.data.model.MovieRespond
 import br.com.andrecouto.nextel.themoviesdbapp.data.module.MainScreenModule
 import br.com.andrecouto.nextel.themoviesdbapp.ui.contract.MainScreenContract
 import br.com.andrecouto.nextel.themoviesdbapp.ui.presenter.MainScreenPresenter
@@ -35,8 +36,8 @@ class MainActivity : AppCompatActivity(), MainScreenContract.View   {
         Log.e("complete", "completed")
     }
 
-    override fun showPosts(posts: List<Movie>?) {
-        Log.e("moviex", posts!!.get(0).title)
+    override fun showPosts(posts: MovieRespond?) {
+        Log.e("moviex", posts!!.movieList!!.get(0).title)
     }
 
 
