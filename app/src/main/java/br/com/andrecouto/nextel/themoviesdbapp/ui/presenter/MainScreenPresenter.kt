@@ -1,5 +1,6 @@
 package br.com.andrecouto.nextel.themoviesdbapp.ui.presenter
 
+import android.provider.SyncStateContract
 import br.com.andrecouto.nextel.themoviesdbapp.data.api.MovieAPI
 import br.com.andrecouto.nextel.themoviesdbapp.data.model.Movie
 import javax.inject.Inject;
@@ -8,6 +9,7 @@ import rx.Observer;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 import br.com.andrecouto.nextel.themoviesdbapp.ui.contract.MainScreenContract
+import br.com.andrecouto.nextel.themoviesdbapp.util.Constants
 import rx.Observable
 
 class MainScreenPresenter @Inject
@@ -21,7 +23,7 @@ constructor(retrofit: Retrofit, mView: MainScreenContract.View) : MainScreenCont
     }
 
     override fun loadMovies() {
-        retrofit.create(MovieAPI::class.java).movieList
+        retrofit.create(MovieAPI::class.java).getMovies(Constants.apikey, "en-US", 1)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .unsubscribeOn(Schedulers.io())

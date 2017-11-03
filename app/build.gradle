@@ -1,5 +1,5 @@
 apply plugin: 'com.android.application'
-//apply plugin: 'com.neenbedankt.android-apt'
+apply plugin: 'com.neenbedankt.android-apt'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
@@ -13,6 +13,7 @@ android {
         targetSdkVersion 25
         versionCode 1
         versionName "1.0"
+        multiDexEnabled true
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
@@ -21,9 +22,14 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
-    kapt {
-        generateStubs = false
+    defaultConfig {
+        multiDexEnabled true
     }
+
+}
+
+kapt {
+    generateStubs = true
 }
 
 dependencies {
@@ -31,7 +37,7 @@ dependencies {
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.1', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
-
+    compile 'com.android.support:multidex:1.0.0'
     compile 'com.android.support:appcompat-v7:25.+'
     compile 'com.android.support:recyclerview-v7:25.+'
 
@@ -40,13 +46,8 @@ dependencies {
     compile "org.jetbrains.anko:anko-commons:$anko_version"
 
     //Dagger2
-    //kapt 'com.google.dagger:dagger-compiler:2.5'
-
-    //Dagger2
-    //apt 'com.google.dagger:dagger-compiler:2.2'
-    //compile 'com.google.dagger:dagger:2.2'
-    compile 'com.google.dagger:dagger:2.2'
-    compile 'com.google.dagger:dagger-compiler:2.2'
+    kapt 'com.google.dagger:dagger-compiler:2.7'
+    compile 'com.google.dagger:dagger:2.7'
     provided 'javax.annotation:jsr250-api:1.0'
 
     //Retrofit
@@ -68,7 +69,7 @@ dependencies {
 
     // Google Room
     compile "android.arch.persistence.room:runtime:$room_version"
-    annotationProcessor "android.arch.persistence.room:compiler:$room_version"
+    kapt "android.arch.persistence.room:compiler:$room_version"
     compile "android.arch.persistence.room:compiler:$room_version"
 
     testCompile 'junit:junit:4.12'
