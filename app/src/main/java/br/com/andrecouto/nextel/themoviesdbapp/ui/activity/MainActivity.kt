@@ -6,7 +6,7 @@ import android.util.Log
 import br.com.andrecouto.nextel.themoviesdbapp.App
 import br.com.andrecouto.nextel.themoviesdbapp.R
 import br.com.andrecouto.nextel.themoviesdbapp.data.component.DaggerMainScreenComponent
-import br.com.andrecouto.nextel.themoviesdbapp.data.model.Movie
+import br.com.andrecouto.nextel.themoviesdbapp.data.dao.DatabaseManager
 import br.com.andrecouto.nextel.themoviesdbapp.data.model.MovieRespond
 import br.com.andrecouto.nextel.themoviesdbapp.data.module.MainScreenModule
 import br.com.andrecouto.nextel.themoviesdbapp.ui.contract.MainScreenContract
@@ -37,8 +37,6 @@ class MainActivity : AppCompatActivity(), MainScreenContract.View   {
     }
 
     override fun showPosts(posts: MovieRespond?) {
-        Log.e("moviex", posts!!.movieList!!.get(0).title)
+        val dao = DatabaseManager.getMovieDAO()
     }
-
-
 }

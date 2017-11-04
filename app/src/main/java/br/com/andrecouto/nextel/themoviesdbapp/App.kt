@@ -5,6 +5,7 @@ import br.com.andrecouto.nextel.themoviesdbapp.data.component.DaggerNetComponent
 import br.com.andrecouto.nextel.themoviesdbapp.data.component.NetComponent
 import br.com.andrecouto.nextel.themoviesdbapp.data.module.AppModule
 import br.com.andrecouto.nextel.themoviesdbapp.data.module.NetModule
+import br.com.andrecouto.nextel.themoviesdbapp.util.Constants
 
 class App : Application() {
     var netComponent: NetComponent? = null
@@ -12,7 +13,21 @@ class App : Application() {
         super.onCreate()
         netComponent = DaggerNetComponent.builder()
                 .appModule(AppModule(this))
-                .netModule(NetModule("https://api.themoviedb.org/"))
+                .netModule(NetModule(Constants.baseUrl))
                 .build()
+        // Salva a instância para termos acesso como Singleton
+        appInstance = this
+    }
+
+    companion object {
+        // Singleton da classe Application
+        private var appInstance: App? = null
+
+        fun getInstance(): App {
+            if (appInstance == null) {
+                throw IllegalStateException("Configure a classe de Application no AndroidManifest.xml")
+            }
+            return appInstance!!
+        }
     }
 }
