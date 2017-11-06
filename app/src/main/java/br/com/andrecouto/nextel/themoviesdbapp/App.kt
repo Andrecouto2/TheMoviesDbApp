@@ -13,7 +13,7 @@ class App : Application() {
         super.onCreate()
         netComponent = DaggerNetComponent.builder()
                 .appModule(AppModule(this))
-                .netModule(NetModule(Constants.baseUrl))
+                .netModule(NetModule(Constants.BASE_URL))
                 .build()
         // Salva a instância para termos acesso como Singleton
         appInstance = this

@@ -18,40 +18,40 @@ class Movie(id: Int, voteCount: Int, video: Boolean, voteAverage: Double,
     var id: Int = 0
 
     @SerializedName("vote_count")
-    var voteCount: Int = 0
+    var voteCount: Int? = 0
 
-    var video: Boolean = false
+    var video: Boolean? = false
 
     @SerializedName("vote_average")
-    var voteAverage: Double = 0.0
+    var voteAverage: Double? = 0.0
 
-    var title: String = ""
+    var title: String? = ""
 
-    var popularity: Double = 0.0
+    var popularity: Double? = 0.0
 
     @SerializedName("poster_path")
-    var posterPath: String = ""
+    var posterPath: String? = ""
 
     @SerializedName("original_language")
-    var originalLanguage: String = ""
+    var originalLanguage: String? = ""
 
     @SerializedName("original_title")
-    var originalTitle: String = ""
+    var originalTitle: String? = ""
 
     @SerializedName("backdrop_path")
-    var backdropPath: String = ""
+    var backdropPath: String? = ""
 
-    var adult: Boolean = false
+    var adult: Boolean? = false
 
-    var overview: String = ""
+    var overview: String? = ""
 
     @SerializedName("release_date")
     @Ignore
-    var releaseDate: Date = Date()
+    var releaseDate: Date? = Date()
 
     @SerializedName("genre_ids")
     @Ignore
-    var genreIds: IntArray = intArrayOf()
+    var genreIds: IntArray? = intArrayOf()
 
     constructor() : this(0, 0, false, 0.0, "", 0.0, "", "", "", "", false, "", Date(), intArrayOf())
 
@@ -76,38 +76,37 @@ class Movie(id: Int, voteCount: Int, video: Boolean, voteAverage: Double,
         this.genreIds = genreIds
     }
 
-
     constructor(source: Parcel) : this(
-            source.readInt(),
-            source.readInt(),
-            1 == source.readInt(),
-            source.readDouble(),
-            source.readString(),
-            source.readDouble(),
-            source.readString(),
-            source.readString(),
-            source.readString(),
-            source.readString(),
-            1 == source.readInt(),
-            source.readString(),
-            source.readSerializable() as Date,
-            source.createIntArray()
+    source.readInt(),
+    source.readInt(),
+    1 == source.readInt(),
+    source.readDouble(),
+    source.readString(),
+    source.readDouble(),
+    source.readString(),
+    source.readString(),
+    source.readString(),
+    source.readString(),
+    1 == source.readInt(),
+    source.readString(),
+    source.readSerializable() as Date,
+    source.createIntArray()
     )
 
     override fun describeContents() = 0
 
     override fun writeToParcel(dest: Parcel, flags: Int) = with(dest) {
         writeInt(id)
-        writeInt(voteCount)
-        writeInt((if (video) 1 else 0))
-        writeDouble(voteAverage)
+        writeInt(voteCount!!)
+        writeInt((if (video!!) 1 else 0))
+        writeDouble(voteAverage!!)
         writeString(title)
-        writeDouble(popularity)
+        writeDouble(popularity!!)
         writeString(posterPath)
         writeString(originalLanguage)
         writeString(originalTitle)
         writeString(backdropPath)
-        writeInt((if (adult) 1 else 0))
+        writeInt((if (adult!!) 1 else 0))
         writeString(overview)
         writeSerializable(releaseDate)
         writeIntArray(genreIds)

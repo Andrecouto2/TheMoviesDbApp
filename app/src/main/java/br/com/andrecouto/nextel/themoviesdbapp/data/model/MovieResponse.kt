@@ -2,7 +2,7 @@ package br.com.andrecouto.nextel.themoviesdbapp.data.model
 
 import com.google.gson.annotations.SerializedName
 
-class MovieRespond {
+class MovieResponse {
     @SerializedName("results")
-    var movieList : List<Movie>? = null
+    lateinit var movieList : ArrayList<Movie>
 }

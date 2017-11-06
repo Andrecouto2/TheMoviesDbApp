@@ -1,9 +1,8 @@
 package br.com.andrecouto.nextel.themoviesdbapp.ui.presenter
 
-import android.provider.SyncStateContract
 import br.com.andrecouto.nextel.themoviesdbapp.data.api.MovieAPI
 import br.com.andrecouto.nextel.themoviesdbapp.data.model.Movie
-import br.com.andrecouto.nextel.themoviesdbapp.data.model.MovieRespond
+import br.com.andrecouto.nextel.themoviesdbapp.data.model.MovieResponse
 import javax.inject.Inject;
 import retrofit2.Retrofit;
 import rx.Observer;
@@ -23,12 +22,12 @@ constructor(retrofit: Retrofit, mView: MainScreenContract.View) : MainScreenCont
         this.mView = mView
     }
 
-    override fun loadMovies() {
-        retrofit.create(MovieAPI::class.java).getMovies(Constants.apikey, "en-US", 1)
+    override fun loadMovies(page: Int) {
+        retrofit.create(MovieAPI::class.java).getMovies(Constants.API_KEY, "en-US", page)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .unsubscribeOn(Schedulers.io())
-                .subscribe(object : Observer<MovieRespond> {
+                .subscribe(object : Observer<MovieResponse> {
                     override fun onCompleted() {
                         mView.showComplete()
                     }
@@ -39,7 +38,7 @@ constructor(retrofit: Retrofit, mView: MainScreenContract.View) : MainScreenCont
                         }
                     }
 
-                    override fun onNext(t: MovieRespond?) {
+                    override fun onNext(t: MovieResponse?) {
                         mView.showPosts(t)
                     }
 
