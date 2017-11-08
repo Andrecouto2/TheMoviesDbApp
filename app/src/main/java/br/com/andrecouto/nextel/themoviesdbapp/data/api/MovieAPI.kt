@@ -1,9 +1,8 @@
 package br.com.andrecouto.nextel.themoviesdbapp.data.api
 
 import br.com.andrecouto.nextel.themoviesdbapp.data.model.MovieResponse
+import io.reactivex.Observable
 import retrofit2.http.*
-import rx.Observable
-
 
 interface MovieAPI {
 
@@ -11,5 +10,5 @@ interface MovieAPI {
     fun getMovies(
             @Query("api_key") apikey:String,
             @Query("language") language:String,
-            @Query("page") page:Int):Observable<MovieResponse>
+            @Query("page") page:Int): Observable<MovieResponse>
 }

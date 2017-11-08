@@ -5,6 +5,7 @@
     <item android:id="@+id/action_search"
         android:title="Pesquisar Filmes"
         app:actionViewClass="android.support.v7.widget.SearchView"
-        app:showAsAction="always"/>
+        app:showAsAction="always"
+        android:voiceSearchMode="showVoiceSearchButton|launchRecognizer"/>
 
 </menu>

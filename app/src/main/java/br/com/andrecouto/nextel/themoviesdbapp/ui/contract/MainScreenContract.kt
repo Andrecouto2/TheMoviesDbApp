@@ -1,5 +1,6 @@
 package br.com.andrecouto.nextel.themoviesdbapp.ui.contract
 
+import br.com.andrecouto.nextel.themoviesdbapp.data.model.Movie
 import br.com.andrecouto.nextel.themoviesdbapp.data.model.MovieResponse
 
 interface MainScreenContract {

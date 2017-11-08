@@ -96,6 +96,7 @@ class MovieAdapter(val context: Context, val movies: ArrayList<Movie>, val onCli
         {
             add(result)
         }
+        notifyDataSetChanged()
     }
 
     fun remove(r:Movie) {

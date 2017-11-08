@@ -6,4 +6,7 @@
     <string name="error_msg_timeout">The server took too long to respond</string>
     <string name="error_msg_unknown">An unexpected error occurred</string>
     <string name="tap_to_reload">Tap to reload</string>
+    <string name="search_hint">Pesquisar filmes</string>
+    <string name="label_find_movies"><![CDATA[<font size=16> Encontramos </font><font color=#212a37 size=40>%1$s resultados:</font>]]></string>
+    <string name="label_find_movies_singular"><![CDATA[<font size=16> Encontramos </font><font color=#212a37 size=40>%1$s resultado:</font>]]></string>
 </resources>

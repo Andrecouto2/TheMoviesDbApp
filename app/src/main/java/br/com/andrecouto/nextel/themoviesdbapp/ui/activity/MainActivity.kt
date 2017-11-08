@@ -1,9 +1,10 @@
 package br.com.andrecouto.nextel.themoviesdbapp.ui.activity
 
+import android.app.SearchManager
+import android.content.ComponentName
+import android.content.Context
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
-import android.support.annotation.UiThread
-import android.support.v4.view.MenuItemCompat
 import android.support.v7.widget.DefaultItemAnimator
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.SearchView
@@ -21,16 +22,16 @@ import br.com.andrecouto.nextel.themoviesdbapp.data.module.MainScreenModule
 import br.com.andrecouto.nextel.themoviesdbapp.ui.contract.MainScreenContract
 import br.com.andrecouto.nextel.themoviesdbapp.ui.pagination.PaginationScrollListener
 import br.com.andrecouto.nextel.themoviesdbapp.ui.presenter.MainScreenPresenter
-import br.com.andrecouto.nextel.themoviesdbapp.util.NetworkUtils
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.error_layout.*
 import org.jetbrains.anko.doAsync
-import org.jetbrains.anko.startActivity
 import org.jetbrains.anko.uiThread
 import javax.inject.Inject
 import kotlin.concurrent.thread
 
-class MainActivity : AppCompatActivity(), MainScreenContract.View, SearchView.OnQueryTextListener {
+class MainActivity : AppCompatActivity(), MainScreenContract.View {
 
     @Inject
     internal lateinit var mainPresenter: MainScreenPresenter
@@ -40,7 +41,6 @@ class MainActivity : AppCompatActivity(), MainScreenContract.View, SearchView.On
     val pagination = 20
     var isLoadingInner = false
     var isLastPageInner = false
-    var isAlreadyResquested = false
     var totalPages = 1
     var currentPage = 1
 
@@ -63,7 +63,6 @@ class MainActivity : AppCompatActivity(), MainScreenContract.View, SearchView.On
                 get() = isLoadingInner
             override fun loadMoreItems() {
                 if (!isLoadingInner) {
-                    currentPage += 1
                     loadNextPage()
                     isLoadingInner = true
                 }
@@ -76,69 +75,49 @@ class MainActivity : AppCompatActivity(), MainScreenContract.View, SearchView.On
             hideErrorView();
             getMovies()
         }
+
+       DatabaseManager.getMovieDAO().findAll()?.subscribeOn(Schedulers.io())
+                ?.observeOn(AndroidSchedulers.mainThread())
+                ?.subscribe { listOfMovies ->
+                    totalPages = Math.round((listOfMovies.size/pagination).toDouble()).toInt()
+                }
+
         supportActionBar.apply { title = "" }
+
         getMovies()
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         getMenuInflater().inflate(R.menu.menu_movies, menu)
-        val searchItem = menu.findItem(R.id.action_search)
-        val searchView = MenuItemCompat.getActionView(searchItem) as SearchView
-        searchView.setOnQueryTextListener(this)
+        val searchManager = getSystemService(Context.SEARCH_SERVICE) as SearchManager
+        val searchView = menu.findItem(R.id.action_search).getActionView() as SearchView
+        searchView.setSearchableInfo(searchManager.getSearchableInfo(ComponentName(this, SearchResultsActivity::class.java)))
         return true
-    }
-
-    override fun onQueryTextSubmit(query: String?): Boolean {
-        return true
-    }
-
-    override fun onQueryTextChange(newText: String?): Boolean {
-        return false
-    }
-
-    fun getTotalOfPages(count: Int): Int {
-        if (count == 0) {
-            return 1
-        }
-        if (count % pagination == 0) {
-            return (count / pagination) + 1
-        } else {
-            var i: Double = (count / pagination).toDouble()
-            return Math.round(i).toInt() + 1
-        }
     }
 
     fun getMovies() {
         val dao = DatabaseManager.getMovieDAO()
-        doAsync {
-            thread {
-                if (dao.findAll().size >= currentPage * pagination) {
-                    addMovies(getMoviesPagination(currentPage))
-                } else {
-                    mainPresenter.loadMovies(currentPage)
+        dao.findAll()?.subscribeOn(Schedulers.io())
+                ?.observeOn(AndroidSchedulers.mainThread())
+                ?.subscribe { listOfMovies ->
+                    if (listOfMovies.size >= currentPage * pagination) {
+                        var start: Int = 0
+                        if (currentPage > 1)
+                            start = (currentPage - 1) * pagination
+
+                        dao.findNext(start, pagination)?.subscribeOn(Schedulers.io())
+                                ?.observeOn(AndroidSchedulers.mainThread())
+                                ?.subscribe { listOfNextMovies ->
+                                    addMovies(listOfNextMovies)
+                                    isLoadingInner = false
+                                    currentPage += 1
+                                }
+                    } else {
+                        mainPresenter.loadMovies(currentPage)
+                        currentPage += 1
+                    }
+
                 }
-            }
-
-        }
-    }
-
-    fun getMoviesPagination(page: Int) : List<Movie> {
-        val movies : List<Movie> = DatabaseManager.getMovieDAO().findAll()
-        var retorno : ArrayList<Movie> = ArrayList()
-        var i: Int = 0
-        var k: Int = page * pagination
-        if (page != 1) {
-            i = (page-1) * pagination
-        }
-        for (n in i..k-1) {
-            retorno.add(movies[n])
-        }
-        if (!isAlreadyResquested) {
-            totalPages = getTotalOfPages(movies.size)
-            isAlreadyResquested = true
-        }
-        isLoadingInner = false
-        return retorno
     }
 
     open fun onClickMovie(movie: Movie) {
@@ -175,13 +154,12 @@ class MainActivity : AppCompatActivity(), MainScreenContract.View, SearchView.On
 
     override fun showPosts(posts: MovieResponse?) {
         val dao = DatabaseManager.getMovieDAO()
-        isAlreadyResquested = true
         totalPages = posts!!.totalPages
         doAsync {
             thread {
-                dao.insert(posts!!.movieList)
+                 dao.insert(posts!!.movieList)
             }
-           addMovies(posts!!.movieList)
+            getMovies()
         }
     }
 
@@ -190,7 +168,6 @@ class MainActivity : AppCompatActivity(), MainScreenContract.View, SearchView.On
             uiThread {
                 adapter.addAll(movies)
                 adapter.removeLoadingFooter()
-                adapter.notifyDataSetChanged()
                 main_progress.visibility = View.GONE
             }
         }
