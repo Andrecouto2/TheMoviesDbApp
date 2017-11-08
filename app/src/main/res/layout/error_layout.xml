@@ -5,7 +5,7 @@
     android:layout_height="match_parent">
 
     <LinearLayout
-        android:id="@+id/error_layout"
+        android:id="@+id/errorLayout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
@@ -21,7 +21,7 @@
             android:text="@string/error_msg"/>
 
         <TextView
-            android:id="@+id/error_txt_cause"
+            android:id="@+id/tErrorCause"
             style="@style/TextAppearance.AppCompat.Caption"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -30,10 +30,11 @@
             android:textSize="@dimen/default_11sp"
             android:layout_marginTop="@dimen/activity_margin_quarter"
             android:ellipsize="end"
+            android:gravity="center"
             tools:text="The server took too long to respond."/>
 
         <Button
-            android:id="@+id/error_btn_retry"
+            android:id="@+id/btnErrorRetry"
             style="@style/Widget.AppCompat.Button.Borderless"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

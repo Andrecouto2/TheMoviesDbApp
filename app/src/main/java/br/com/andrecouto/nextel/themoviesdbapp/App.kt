@@ -15,7 +15,7 @@ class App : Application() {
                 .appModule(AppModule(this))
                 .netModule(NetModule(Constants.BASE_URL))
                 .build()
-        // Salva a instância para termos acesso como Singleton
+        // Salva a instância
         appInstance = this
     }
 

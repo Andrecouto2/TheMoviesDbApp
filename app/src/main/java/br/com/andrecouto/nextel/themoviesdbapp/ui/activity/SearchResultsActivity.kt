@@ -26,10 +26,10 @@ class SearchResultsActivity : AppCompatActivity(), SearchView.OnQueryTextListene
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_search)
-        search_recycler.setLayoutManager(LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false))
-        search_recycler.setItemAnimator(DefaultItemAnimator())
+        searchRecycler.setLayoutManager(LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false))
+        searchRecycler.setItemAnimator(DefaultItemAnimator())
         adapter = MovieAdapter(applicationContext, ArrayList()) {}
-        search_recycler.adapter = adapter
+        searchRecycler.adapter = adapter
         handleIntent(getIntent())
     }
 
@@ -57,7 +57,7 @@ class SearchResultsActivity : AppCompatActivity(), SearchView.OnQueryTextListene
                 ?.observeOn(AndroidSchedulers.mainThread())
                 ?.subscribe { listOfMovies ->
                     adapter.addAll(listOfMovies)
-                    txt_result_search.setText(Html.fromHtml(SearchUtils.getResultSearchString(this, listOfMovies.size)))
+                    tResultSearch.setText(Html.fromHtml(SearchUtils.getResultSearchString(this, listOfMovies.size)))
                 }
     }
 

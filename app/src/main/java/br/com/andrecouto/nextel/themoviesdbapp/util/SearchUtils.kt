@@ -10,9 +10,9 @@ object SearchUtils {
 
       fun getResultSearchString(context: Context, size: Int) : String {
           if (size == 0) {
-              return context.getString(R.string.label_find_movies_singular, 0)
+              return context.getString(R.string.label_find_movies_singular, "0")
           } else if (size == 1) {
-              return context.getString(R.string.label_find_movies_singular, 1)
+              return context.getString(R.string.label_find_movies_singular, "0"+size)
           } else if (size < 10) {
               return context.getString(R.string.label_find_movies, "0"+size)
           } else {

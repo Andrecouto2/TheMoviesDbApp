@@ -6,13 +6,13 @@
     tools:background="#fafafa">
 
     <ProgressBar
-        android:id="@+id/loadmore_progress"
+        android:id="@+id/loadMoreProgress"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"/>
 
     <LinearLayout
-        android:id="@+id/loadmore_errorlayout"
+        android:id="@+id/loadMoreErrorLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="?attr/selectableItemBackground"
@@ -24,7 +24,7 @@
         tools:visibility="visible">
 
         <ImageButton
-            android:id="@+id/loadmore_retry"
+            android:id="@+id/loadmoreRetry"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
@@ -48,7 +48,7 @@
             android:orientation="vertical">
 
             <TextView
-                android:id="@+id/loadmore_errortxt"
+                android:id="@+id/tloadMoreError"
                 style="@style/Base.TextAppearance.AppCompat.Body1"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

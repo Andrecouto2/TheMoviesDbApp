@@ -20,11 +20,11 @@ fun ImageView.loadUrl(url: String?, progress: ProgressBar? = null, isConnected: 
                     object : com.squareup.picasso.Callback {
                         override fun onSuccess() {
                             // Download OK
-                            progress.visibility = View.GONE
+                            progress?.visibility = View.GONE
                         }
 
                         override fun onError() {
-                            progress.visibility = View.GONE
+                            progress?.visibility = View.GONE
                         }
                     })
         } else {
@@ -32,11 +32,11 @@ fun ImageView.loadUrl(url: String?, progress: ProgressBar? = null, isConnected: 
                     object : com.squareup.picasso.Callback {
                         override fun onSuccess() {
                             // Download OK
-                            progress.visibility = View.GONE
+                            progress?.visibility = View.GONE
                         }
 
                         override fun onError() {
-                            progress.visibility = View.GONE
+                            progress?.visibility = View.GONE
                         }
                     })
         }

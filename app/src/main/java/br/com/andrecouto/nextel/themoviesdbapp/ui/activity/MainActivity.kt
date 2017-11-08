@@ -5,6 +5,7 @@ import android.content.ComponentName
 import android.content.Context
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.support.v4.view.MenuItemCompat
 import android.support.v7.widget.DefaultItemAnimator
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.SearchView
@@ -27,6 +28,7 @@ import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.error_layout.*
 import org.jetbrains.anko.doAsync
+import org.jetbrains.anko.startActivity
 import org.jetbrains.anko.uiThread
 import javax.inject.Inject
 import kotlin.concurrent.thread
@@ -52,11 +54,11 @@ class MainActivity : AppCompatActivity(), MainScreenContract.View {
                 .mainScreenModule(MainScreenModule(this))
                 .build().inject(this)
         linearLayoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
-        main_recycler.setLayoutManager(linearLayoutManager)
-        main_recycler.setItemAnimator(DefaultItemAnimator())
+        mainRecycler.setLayoutManager(linearLayoutManager)
+        mainRecycler.setItemAnimator(DefaultItemAnimator())
         adapter = MovieAdapter(applicationContext, ArrayList()) { onClickMovie(it) }
-        main_recycler.adapter = adapter
-        main_recycler.addOnScrollListener(object: PaginationScrollListener(linearLayoutManager) {
+        mainRecycler.adapter = adapter
+        mainRecycler.addOnScrollListener(object: PaginationScrollListener(linearLayoutManager) {
             override val isLastPage: Boolean
                 get() = isLastPageInner
             override val isLoading: Boolean
@@ -71,7 +73,7 @@ class MainActivity : AppCompatActivity(), MainScreenContract.View {
                 get() = totalPages
         })
 
-        error_btn_retry.setOnClickListener {
+        btnErrorRetry.setOnClickListener {
             hideErrorView();
             getMovies()
         }
@@ -90,7 +92,8 @@ class MainActivity : AppCompatActivity(), MainScreenContract.View {
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         getMenuInflater().inflate(R.menu.menu_movies, menu)
         val searchManager = getSystemService(Context.SEARCH_SERVICE) as SearchManager
-        val searchView = menu.findItem(R.id.action_search).getActionView() as SearchView
+        val searchItem = menu.findItem(R.id.action_search)
+        val searchView = MenuItemCompat.getActionView(searchItem) as SearchView
         searchView.setSearchableInfo(searchManager.getSearchableInfo(ComponentName(this, SearchResultsActivity::class.java)))
         return true
     }
@@ -121,20 +124,20 @@ class MainActivity : AppCompatActivity(), MainScreenContract.View {
     }
 
     open fun onClickMovie(movie: Movie) {
-
+        startActivity<DetailsMovieActivity>("movie" to movie)
     }
 
     private fun hideErrorView() {
-        if (error_layout.visibility === View.VISIBLE) {
-            error_layout.setVisibility(View.GONE)
-            main_progress.setVisibility(View.VISIBLE)
+        if (errorLayout.visibility === View.VISIBLE) {
+            errorLayout.setVisibility(View.GONE)
+            mainProgress.setVisibility(View.VISIBLE)
         }
     }
 
     override fun showError(message: String) {
-        error_layout.visibility = View.VISIBLE
-        error_txt_cause.setText(message)
-        main_progress.visibility = View.GONE
+        errorLayout.visibility = View.VISIBLE
+        tErrorCause.setText(message)
+        mainProgress.visibility = View.GONE
         currentPage =- 1
         isLoadingInner = false
     }
@@ -168,7 +171,7 @@ class MainActivity : AppCompatActivity(), MainScreenContract.View {
             uiThread {
                 adapter.addAll(movies)
                 adapter.removeLoadingFooter()
-                main_progress.visibility = View.GONE
+                mainProgress.visibility = View.GONE
             }
         }
     }

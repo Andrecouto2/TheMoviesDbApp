@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">TheMoviesDbApp</string>
+    <string name="error_msg">" Desculpa! Não foi possível buscar filmes."</string>
+    <string name="btn_retry">Repetir</string>
+    <string name="error_msg_no_internet">Não conectado à internet</string>
+    <string name="error_msg_timeout">O servidor demorou muito para responder</string>
+    <string name="error_msg_unknown">Um erro inesperado ocorreu</string>
+    <string name="tap_to_reload">Toque para recarregar</string>
+    <string name="search_hint">Pesquisar filmes</string>
+    <string name="label_find_movies"><![CDATA[<font size=16> Encontramos </font><font color=#212a37 size=40>%1$s resultados:</font>]]></string>
+    <string name="label_find_movies_singular"><![CDATA[<font size=16> Encontramos </font><font color=#212a37 size=40>%1$s resultado:</font>]]></string>
+    <string name="description">Descrição</string>
+    <string name="information">Informação</string>
+</resources>

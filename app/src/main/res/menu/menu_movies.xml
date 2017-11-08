@@ -6,6 +6,6 @@
         android:title="Pesquisar Filmes"
         app:actionViewClass="android.support.v7.widget.SearchView"
         app:showAsAction="always"
-        android:voiceSearchMode="showVoiceSearchButton|launchRecognizer"/>
+        android:voiceSearchMode="showVoiceSearchButton|launchRecognizer" />
 
 </menu>

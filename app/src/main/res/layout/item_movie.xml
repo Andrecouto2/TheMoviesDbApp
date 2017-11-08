@@ -15,7 +15,7 @@
         app:cardPreventCornerOverlap="false">
 
         <ProgressBar
-            android:id="@+id/movie_progress"
+            android:id="@+id/movieProgress"
             style="@style/Widget.AppCompat.ProgressBar"
             android:layout_width="@dimen/activity_margin"
             android:layout_height="@dimen/activity_margin"
@@ -23,7 +23,7 @@
             android:theme="@style/CircularProgress"/>
 
         <ImageView
-            android:id="@+id/movie_poster"
+            android:id="@+id/moviePoster"
             android:layout_width="@dimen/poster_thumb_width"
             android:layout_height="@dimen/poster_thumb_height"/>
 
@@ -44,7 +44,7 @@
         android:paddingTop="@dimen/activity_margin_half">
 
         <TextView
-            android:id="@+id/movie_year"
+            android:id="@+id/tMovieYear"
             style="@style/TextAppearance.AppCompat.Caption"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -57,7 +57,7 @@
             tools:text="2009 | EN"/>
 
         <TextView
-            android:id="@+id/movie_title"
+            android:id="@+id/tMovieTitle"
             style="@style/TextAppearance.AppCompat.Subhead"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -68,7 +68,7 @@
             tools:text="Movie Title"/>
 
         <TextView
-            android:id="@+id/movie_desc"
+            android:id="@+id/tMovieDesc"
             style="@style/TextAppearance.AppCompat.Caption"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

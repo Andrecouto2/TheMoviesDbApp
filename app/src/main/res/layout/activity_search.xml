@@ -8,7 +8,7 @@
     tools:context=".ui.activity.SearchResultsActivity">
 
     <TextView
-        android:id="@+id/txt_result_search"
+        android:id="@+id/tResultSearch"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/label_find_movies"
@@ -19,7 +19,7 @@
         android:textSize="@dimen/default_18sp"/>
 
     <android.support.v7.widget.RecyclerView
-        android:id="@+id/search_recycler"
+        android:id="@+id/searchRecycler"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:clipToPadding="false"

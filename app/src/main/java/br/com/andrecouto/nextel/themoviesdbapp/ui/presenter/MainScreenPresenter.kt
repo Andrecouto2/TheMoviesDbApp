@@ -1,9 +1,8 @@
 package br.com.andrecouto.nextel.themoviesdbapp.ui.presenter
 
+import android.content.res.Resources
 import android.util.Log
 import br.com.andrecouto.nextel.themoviesdbapp.data.api.MovieAPI
-import br.com.andrecouto.nextel.themoviesdbapp.data.dao.DatabaseManager
-import br.com.andrecouto.nextel.themoviesdbapp.data.model.Movie
 import br.com.andrecouto.nextel.themoviesdbapp.data.model.MovieResponse
 import javax.inject.Inject;
 import retrofit2.Retrofit;
@@ -26,7 +25,7 @@ constructor(retrofit: Retrofit, mView: MainScreenContract.View) : MainScreenCont
     }
 
     override fun loadMovies(page: Int) {
-        retrofit.create(MovieAPI::class.java).getMovies(Constants.API_KEY, "en-US", page)
+        retrofit.create(MovieAPI::class.java).getMovies(Constants.API_KEY, Resources.getSystem().getConfiguration().locale.getLanguage(), page)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .unsubscribeOn(Schedulers.io())

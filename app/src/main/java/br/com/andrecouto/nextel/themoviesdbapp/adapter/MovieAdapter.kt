@@ -47,16 +47,16 @@ class MovieAdapter(val context: Context, val movies: ArrayList<Movie>, val onCli
     }
 
     override fun onBindViewHolder(holder: MoviesViewHolder, position: Int) {
-        val result: Movie = movies.get(position) // Movie
+        val movie: Movie = movies.get(position) // Movie
         when (getItemViewType(position)) {
             ITEM -> {
                 val view = holder.itemView
                 with(view) {
-                    movie_year.setText(DateUtils.formatYearLabel(result))
-                    movie_title.setText(result.title)
-                    movie_desc.setText(result.overview)
-                    movie_poster.loadUrl(Constants.BASE_URL_IMG + result.posterPath, movie_progress, NetworkUtils.isNetworkAvailable(context))
-                    setOnClickListener { onClick(result) }
+                    tMovieYear.setText(DateUtils.formatYearLabel(movie))
+                    tMovieTitle.setText(movie.title)
+                    tMovieDesc.setText(movie.overview)
+                    moviePoster.loadUrl(Constants.BASE_URL_IMG_150 + movie.posterPath, movieProgress, NetworkUtils.isNetworkAvailable(context))
+                    setOnClickListener { onClick(movie) }
                 }
             }
             LOADING -> {
@@ -64,16 +64,16 @@ class MovieAdapter(val context: Context, val movies: ArrayList<Movie>, val onCli
                 with(view) {
                     if (retryPageLoad) {
 
-                        loadmore_errorlayout.visibility = View.VISIBLE
-                        loadmore_progress.visibility = View.GONE
-                        loadmore_errortxt.setText(if (errorMsg != null)
+                        loadMoreErrorLayout.visibility = View.VISIBLE
+                        loadMoreProgress.visibility = View.GONE
+                        tloadMoreError.setText(if (errorMsg != null)
                             errorMsg
                         else
                             context.getString(R.string.error_msg_unknown))
 
                     } else {
-                        loadmore_errorlayout.visibility = View.GONE
-                        loadmore_progress.visibility = View.VISIBLE
+                        loadMoreErrorLayout.visibility = View.GONE
+                        loadMoreProgress.visibility = View.VISIBLE
                     }
                 }
             }
