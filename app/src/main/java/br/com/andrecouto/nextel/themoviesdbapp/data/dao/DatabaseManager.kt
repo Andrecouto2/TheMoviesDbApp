@@ -21,4 +21,12 @@ object DatabaseManager {
     fun getMovieDAO(): MovieDAO {
         return dbInstance.movieDAO()
     }
+
+    fun getCastDAO(): CastDAO {
+        return dbInstance.castDAO()
+    }
+
+    fun getVideoDAO(): VideoDAO {
+        return dbInstance.videoDAO()
+    }
 }

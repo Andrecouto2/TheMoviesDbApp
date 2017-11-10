@@ -17,23 +17,30 @@ import br.com.andrecouto.nextel.themoviesdbapp.R
 import br.com.andrecouto.nextel.themoviesdbapp.adapter.MovieAdapter
 import br.com.andrecouto.nextel.themoviesdbapp.data.component.DaggerMainScreenComponent
 import br.com.andrecouto.nextel.themoviesdbapp.data.dao.DatabaseManager
+import br.com.andrecouto.nextel.themoviesdbapp.data.model.CastResponse
 import br.com.andrecouto.nextel.themoviesdbapp.data.model.Movie
 import br.com.andrecouto.nextel.themoviesdbapp.data.model.MovieResponse
+import br.com.andrecouto.nextel.themoviesdbapp.data.model.VideoResponse
 import br.com.andrecouto.nextel.themoviesdbapp.data.module.MainScreenModule
 import br.com.andrecouto.nextel.themoviesdbapp.ui.contract.MainScreenContract
 import br.com.andrecouto.nextel.themoviesdbapp.ui.pagination.PaginationScrollListener
 import br.com.andrecouto.nextel.themoviesdbapp.ui.presenter.MainScreenPresenter
 import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.error_layout.*
+import org.jetbrains.anko.custom.async
 import org.jetbrains.anko.doAsync
+import org.jetbrains.anko.doAsyncResult
 import org.jetbrains.anko.startActivity
 import org.jetbrains.anko.uiThread
 import javax.inject.Inject
 import kotlin.concurrent.thread
 
-class MainActivity : AppCompatActivity(), MainScreenContract.View {
+class MainActivity : AppCompatActivity(), MainScreenContract.View,
+        MainScreenContract.PlayingNowMoviesView, MainScreenContract.DetailsMovieView,
+        MainScreenContract.CastsMovieView, MainScreenContract.VideosMovieView {
 
     @Inject
     internal lateinit var mainPresenter: MainScreenPresenter
@@ -51,7 +58,7 @@ class MainActivity : AppCompatActivity(), MainScreenContract.View {
         setContentView(R.layout.activity_main)
         DaggerMainScreenComponent.builder()
                 .netComponent((getApplicationContext() as App).netComponent)
-                .mainScreenModule(MainScreenModule(this))
+                .mainScreenModule(MainScreenModule(this, this, this, this, this))
                 .build().inject(this)
         linearLayoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
         mainRecycler.setLayoutManager(linearLayoutManager)
@@ -67,6 +74,7 @@ class MainActivity : AppCompatActivity(), MainScreenContract.View {
                 if (!isLoadingInner) {
                     loadNextPage()
                     isLoadingInner = true
+                    currentPage += 1
                 }
             }
             override val totalPageCount: Int
@@ -98,11 +106,16 @@ class MainActivity : AppCompatActivity(), MainScreenContract.View {
         return true
     }
 
+    override fun onSubscribe(d: Disposable) {
+           //d.dispose()
+    }
+
     fun getMovies() {
         val dao = DatabaseManager.getMovieDAO()
         dao.findAll()?.subscribeOn(Schedulers.io())
                 ?.observeOn(AndroidSchedulers.mainThread())
                 ?.subscribe { listOfMovies ->
+
                     if (listOfMovies.size >= currentPage * pagination) {
                         var start: Int = 0
                         if (currentPage > 1)
@@ -113,18 +126,21 @@ class MainActivity : AppCompatActivity(), MainScreenContract.View {
                                 ?.subscribe { listOfNextMovies ->
                                     addMovies(listOfNextMovies)
                                     isLoadingInner = false
-                                    currentPage += 1
                                 }
                     } else {
                         mainPresenter.loadMovies(currentPage)
-                        currentPage += 1
                     }
 
                 }
+
     }
 
     open fun onClickMovie(movie: Movie) {
-        startActivity<DetailsMovieActivity>("movie" to movie)
+        if (movie.runtime!! > 0) {
+            startActivity<DetailsMovieActivity>("movie" to movie)
+        } else {
+            mainPresenter.getCastsMovie(movie.id!!)
+        }
     }
 
     private fun hideErrorView() {
@@ -138,8 +154,10 @@ class MainActivity : AppCompatActivity(), MainScreenContract.View {
         errorLayout.visibility = View.VISIBLE
         tErrorCause.setText(message)
         mainProgress.visibility = View.GONE
-        currentPage =- 1
         isLoadingInner = false
+        if (currentPage > 1) {
+            currentPage -= 1
+        }
     }
 
     override fun showComplete() {
@@ -155,14 +173,39 @@ class MainActivity : AppCompatActivity(), MainScreenContract.View {
         getMovies()
     }
 
-    override fun showPosts(posts: MovieResponse?) {
+    override fun showMovies(movies: MovieResponse?) {
         val dao = DatabaseManager.getMovieDAO()
-        totalPages = posts!!.totalPages
+        totalPages = movies!!.totalPages
         doAsync {
-            thread {
-                 dao.insert(posts!!.movieList)
+            dao.insert(movies!!.movieList)
+            addMovies(movies!!.movieList)
+        }
+    }
+
+    override fun showDetailsMovie(movie: Movie?) {
+          doAsync {
+              DatabaseManager.getMovieDAO().updateMovie(movie!!)
+              startActivity<DetailsMovieActivity>("movie" to movie)
+          }
+    }
+
+    override fun showCastsMovies(casts: CastResponse?) {
+        doAsync {
+            for (cast in casts!!.castList) {
+                cast.movieId = casts!!.id
+                DatabaseManager.getCastDAO().insert(cast)
             }
-            getMovies()
+        }
+        mainPresenter.getVideoMovie(casts!!.id)
+    }
+
+    override fun showVideosMovies(videos: VideoResponse?) {
+        doAsync {
+            for (video in videos!!.videoList) {
+                video.movieId = videos!!.id
+                DatabaseManager.getVideoDAO().insert(video)
+            }
+            mainPresenter.getDetailsMovie(videos!!.id)
         }
     }
 

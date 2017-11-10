@@ -7,15 +7,17 @@ import android.os.Parcel
 import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
 import java.util.*
+import kotlin.collections.ArrayList
 
 @Entity(tableName = "movie")
-class Movie(id: Int, voteCount: Int, video: Boolean, voteAverage: Double,
-            title: String, popularity: Double, posterPath: String, originalLanguage: String,
-            originalTitle: String, backdropPath: String, adult: Boolean, overview: String,
-            releaseDate: Date, genreIds: IntArray) : Parcelable {
+class Movie(id: Int?, voteCount: Int?, video: Boolean?, voteAverage: Double?,
+            title: String?, popularity: Double?, posterPath: String?, originalLanguage: String?,
+            originalTitle: String, backdropPath: String?, adult: Boolean?, overview: String?,
+            releaseDate: Date?, genreIds: IntArray?, genres: ArrayList<Genre>, homepage: String?,
+            runtime: Int?) :Parcelable {
 
     @PrimaryKey
-    var id: Int = 0
+    var id: Int? = 0
 
     @SerializedName("vote_count")
     var voteCount: Int? = 0
@@ -53,11 +55,13 @@ class Movie(id: Int, voteCount: Int, video: Boolean, voteAverage: Double,
     @Ignore
     var genreIds: IntArray? = intArrayOf()
 
-    constructor() : this(0, 0, false, 0.0, "", 0.0, "", "", "", "", false, "", Date(), intArrayOf())
+    @SerializedName("genres")
+    @Ignore
+    var genres: ArrayList<Genre> = ArrayList()
 
-    override fun toString(): String {
-        return "Movie{title='$title'}"
-    }
+    var homepage: String? = ""
+
+    var runtime: Int? = 0
 
     init {
         this.id = id
@@ -74,42 +78,57 @@ class Movie(id: Int, voteCount: Int, video: Boolean, voteAverage: Double,
         this.overview = overview
         this.releaseDate = releaseDate
         this.genreIds = genreIds
+        this.genres = genres
+        this.homepage = homepage
+        this.runtime = runtime
+    }
+
+    constructor() : this(0, 0, false, 0.0, "", 0.0, "", "", "", "", false, "", Date(), intArrayOf(), ArrayList(), "", 0)
+
+    override fun toString(): String {
+        return "Movie{title='$title'}"
     }
 
     constructor(source: Parcel) : this(
-    source.readInt(),
-    source.readInt(),
-    1 == source.readInt(),
-    source.readDouble(),
-    source.readString(),
-    source.readDouble(),
-    source.readString(),
-    source.readString(),
-    source.readString(),
-    source.readString(),
-    1 == source.readInt(),
-    source.readString(),
-    source.readSerializable() as Date,
-    source.createIntArray()
+            source.readValue(Int::class.java.classLoader) as Int?,
+            source.readValue(Int::class.java.classLoader) as Int?,
+            source.readValue(Boolean::class.java.classLoader) as Boolean?,
+            source.readValue(Double::class.java.classLoader) as Double?,
+            source.readString(),
+            source.readValue(Double::class.java.classLoader) as Double?,
+            source.readString(),
+            source.readString(),
+            source.readString(),
+            source.readString(),
+            source.readValue(Boolean::class.java.classLoader) as Boolean?,
+            source.readString(),
+            source.readSerializable() as Date?,
+            source.createIntArray(),
+            source.createTypedArrayList(Genre.CREATOR),
+            source.readString(),
+            source.readValue(Int::class.java.classLoader) as Int?
     )
 
     override fun describeContents() = 0
 
     override fun writeToParcel(dest: Parcel, flags: Int) = with(dest) {
-        writeInt(id)
-        writeInt(voteCount!!)
-        writeInt((if (video!!) 1 else 0))
-        writeDouble(voteAverage!!)
+        writeValue(id)
+        writeValue(voteCount)
+        writeValue(video)
+        writeValue(voteAverage)
         writeString(title)
-        writeDouble(popularity!!)
+        writeValue(popularity)
         writeString(posterPath)
         writeString(originalLanguage)
         writeString(originalTitle)
         writeString(backdropPath)
-        writeInt((if (adult!!) 1 else 0))
+        writeValue(adult)
         writeString(overview)
         writeSerializable(releaseDate)
         writeIntArray(genreIds)
+        writeTypedList(genres)
+        writeString(homepage)
+        writeValue(runtime)
     }
 
     companion object {

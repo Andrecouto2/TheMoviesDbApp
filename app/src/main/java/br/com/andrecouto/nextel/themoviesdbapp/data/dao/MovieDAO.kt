@@ -3,8 +3,7 @@ package br.com.andrecouto.nextel.themoviesdbapp.data.dao
 import android.arch.persistence.room.*
 import br.com.andrecouto.nextel.themoviesdbapp.data.model.Movie
 import android.arch.persistence.room.Update
-import io.reactivex.Flowable
-import io.reactivex.disposables.Disposable
+import io.reactivex.Maybe
 
 @Dao
 interface MovieDAO {
@@ -13,13 +12,13 @@ interface MovieDAO {
     fun getById(id: Int): Movie?
 
     @Query("SELECT * FROM movie order by title asc")
-    fun findAll(): Flowable<List<Movie>>
+    fun findAll(): Maybe<List<Movie>>
 
     @Query("SELECT * FROM movie where voteAverage > 5.0 order by title asc LIMIT :arg0,:arg1")
-    fun findNext(first: Int, last: Int): Flowable<List<Movie>>
+    fun findNext(first: Int, last: Int): Maybe<List<Movie>>
 
     @Query("SELECT * FROM movie WHERE title LIKE :arg0 and voteAverage > 5.0 order by title asc")
-    fun findLike(query: String): Flowable<List<Movie>>
+    fun findLike(query: String): Maybe<List<Movie>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insert(movie: Movie)
