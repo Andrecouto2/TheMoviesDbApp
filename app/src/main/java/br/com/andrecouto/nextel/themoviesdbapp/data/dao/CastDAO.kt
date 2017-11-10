@@ -5,7 +5,6 @@ import android.arch.persistence.room.Insert
 import android.arch.persistence.room.OnConflictStrategy
 import android.arch.persistence.room.Query
 import br.com.andrecouto.nextel.themoviesdbapp.data.model.Cast
-import br.com.andrecouto.nextel.themoviesdbapp.data.model.Movie
 import io.reactivex.Maybe
 
 @Dao

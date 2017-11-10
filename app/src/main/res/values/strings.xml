@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">TheMoviesDbApp</string>
+    <string name="app_name">TheMoviesUp</string>
     <string name="error_msg">Sorry! Couldn\'t fetch movies.</string>
     <string name="btn_retry">Retry</string>
     <string name="error_msg_no_internet">Not connected to internet</string>
@@ -9,6 +9,12 @@
     <string name="search_hint">Search movies</string>
     <string name="label_find_movies"><![CDATA[<font size=16> We found </font><font color=#212a37 size=40>%1$s results:</font>]]></string>
     <string name="label_find_movies_singular"><![CDATA[<font size=16> We found </font><font color=#212a37 size=40>%1$s result:</font>]]></string>
-    <string name="description">Description</string>
+    <string name="description">Overview</string>
     <string name="information">Information</string>
+    <string name="release_date">Release Date</string>
+    <string name="cast">Cast</string>
+    <string name="run_time">Run Time</string>
+    <string name="genre">Genre</string>
+    <string name="website">Website</string>
+    <string name="video">Video</string>
 </resources>

@@ -86,7 +86,7 @@ class Movie(id: Int?, voteCount: Int?, video: Boolean?, voteAverage: Double?,
     constructor() : this(0, 0, false, 0.0, "", 0.0, "", "", "", "", false, "", Date(), intArrayOf(), ArrayList(), "", 0)
 
     override fun toString(): String {
-        return "Movie{title='$title'}"
+        return "Movie{title='$title', voteAverage='$voteAverage'}"
     }
 
     constructor(source: Parcel) : this(

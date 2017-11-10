@@ -24,4 +24,7 @@
     <dimen name="default_2dp">2dp</dimen>
     <dimen name="default_16sp">16sp</dimen>
     <dimen name="default_260dp">260dp</dimen>
+    <dimen name="default_110dp">110dp</dimen>
+    <dimen name="default_150dp">150dp</dimen>
+    <dimen name="default_100dp">100dp</dimen>
 </resources>

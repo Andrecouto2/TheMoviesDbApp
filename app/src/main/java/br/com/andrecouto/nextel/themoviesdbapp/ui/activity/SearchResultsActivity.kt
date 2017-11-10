@@ -13,10 +13,12 @@ import android.view.Menu
 import br.com.andrecouto.nextel.themoviesdbapp.R
 import br.com.andrecouto.nextel.themoviesdbapp.adapter.MovieAdapter
 import br.com.andrecouto.nextel.themoviesdbapp.data.dao.DatabaseManager
+import br.com.andrecouto.nextel.themoviesdbapp.data.model.Movie
 import br.com.andrecouto.nextel.themoviesdbapp.util.SearchUtils
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_search.*
+import org.jetbrains.anko.startActivity
 import java.util.*
 
 class SearchResultsActivity : AppCompatActivity(), SearchView.OnQueryTextListener{
@@ -28,7 +30,7 @@ class SearchResultsActivity : AppCompatActivity(), SearchView.OnQueryTextListene
         setContentView(R.layout.activity_search)
         searchRecycler.setLayoutManager(LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false))
         searchRecycler.setItemAnimator(DefaultItemAnimator())
-        adapter = MovieAdapter(applicationContext, ArrayList()) {}
+        adapter = MovieAdapter(applicationContext, ArrayList()) { onClickMovie(it)}
         searchRecycler.adapter = adapter
         handleIntent(getIntent())
     }
@@ -69,5 +71,9 @@ class SearchResultsActivity : AppCompatActivity(), SearchView.OnQueryTextListene
 
     override fun onQueryTextChange(newText: String?): Boolean {
         return false
+    }
+
+    open fun onClickMovie(movie: Movie) {
+        startActivity<DetailsMovieActivity>("movie" to movie)
     }
 }

@@ -76,7 +76,7 @@ constructor(retrofit: Retrofit, dView: MainScreenContract.View,
                 .unsubscribeOn(Schedulers.io())
                 .subscribe({movies: Movie? ->
                     dMoviesView.showDetailsMovie(movies)
-                }, { t: Throwable? -> dView.showError(t!!.message.toString())})
+                })
 
     }
 
@@ -87,7 +87,7 @@ constructor(retrofit: Retrofit, dView: MainScreenContract.View,
                 .unsubscribeOn(Schedulers.io())
                 .subscribe({casts: CastResponse? ->
                     cMoviesView.showCastsMovies(casts)
-                }, { t: Throwable? -> dView.showError(t!!.message.toString())})
+                })
     }
 
     override fun getVideoMovie(movieId: Int) {
@@ -97,8 +97,7 @@ constructor(retrofit: Retrofit, dView: MainScreenContract.View,
                 .unsubscribeOn(Schedulers.io())
                 .subscribe({videos: VideoResponse? ->
                     vMoviesView.showVideosMovies(videos)
-                }, { t: Throwable? ->
-                    dView.showError(t!!.message.toString())})
+                })
     }
 
 }

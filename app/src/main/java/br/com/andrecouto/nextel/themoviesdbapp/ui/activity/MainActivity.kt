@@ -25,6 +25,7 @@ import br.com.andrecouto.nextel.themoviesdbapp.data.module.MainScreenModule
 import br.com.andrecouto.nextel.themoviesdbapp.ui.contract.MainScreenContract
 import br.com.andrecouto.nextel.themoviesdbapp.ui.pagination.PaginationScrollListener
 import br.com.andrecouto.nextel.themoviesdbapp.ui.presenter.MainScreenPresenter
+import br.com.andrecouto.nextel.themoviesdbapp.util.NetworkUtils
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
@@ -136,7 +137,7 @@ class MainActivity : AppCompatActivity(), MainScreenContract.View,
     }
 
     open fun onClickMovie(movie: Movie) {
-        if (movie.runtime!! > 0) {
+        if (movie.runtime!! > 0 || !NetworkUtils.isNetworkAvailable(this)) {
             startActivity<DetailsMovieActivity>("movie" to movie)
         } else {
             mainPresenter.getCastsMovie(movie.id!!)
@@ -178,7 +179,7 @@ class MainActivity : AppCompatActivity(), MainScreenContract.View,
         totalPages = movies!!.totalPages
         doAsync {
             dao.insert(movies!!.movieList)
-            addMovies(movies!!.movieList)
+            addMovies(movies!!.movieList.filter {movie -> movie.voteAverage!! > 5.0  })
         }
     }
 

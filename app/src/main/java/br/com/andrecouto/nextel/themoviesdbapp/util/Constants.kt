@@ -6,4 +6,5 @@ object Constants {
     // urls estão fixas, porém o ideal seria utilizar GET /configuration
     val BASE_URL_IMG_150 = "https://image.tmdb.org/t/p/w150/"
     val BASE_URL_IMG_500 = "https://image.tmdb.org/t/p/w500/"
+    val BASE_URL_VIDEO = "http://www.youtube.com/watch?v="
 }

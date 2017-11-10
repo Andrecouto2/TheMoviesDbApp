@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">TheMoviesDbApp</string>
+    <string name="app_name">TheMoviesUp</string>
     <string name="error_msg">" Desculpa! Não foi possível buscar filmes."</string>
     <string name="btn_retry">Repetir</string>
     <string name="error_msg_no_internet">Não conectado à internet</string>
@@ -11,5 +11,11 @@
     <string name="label_find_movies"><![CDATA[<font size=16> Encontramos </font><font color=#212a37 size=40>%1$s resultados:</font>]]></string>
     <string name="label_find_movies_singular"><![CDATA[<font size=16> Encontramos </font><font color=#212a37 size=40>%1$s resultado:</font>]]></string>
     <string name="description">Descrição</string>
-    <string name="information">Informação</string>
+    <string name="information">Informações</string>
+    <string name="release_date">Data de lançamento</string>
+    <string name="cast">Elenco</string>
+    <string name="run_time">Duração</string>
+    <string name="genre">Gênero</string>
+    <string name="website">Website</string>
+    <string name="video">Video</string>
 </resources>
