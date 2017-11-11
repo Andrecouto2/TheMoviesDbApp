@@ -2,6 +2,7 @@ apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 //apply plugin: 'kotlin-kapt'
 apply plugin: 'kotlin-android-extensions'
+apply plugin: 'io.fabric'
 
 android {
     compileSdkVersion 26
@@ -61,19 +62,13 @@ dependencies {
     implementation 'com.squareup.okhttp3:okhttp:3.8.0'
     implementation 'com.squareup.okio:okio:1.7.0'
 
+    // Crashlytics
+    compile('com.crashlytics.sdk.android:crashlytics:2.7.1@aar') {
+        transitive = true;
+    }
     //Gson
     implementation 'com.google.code.gson:gson:2.8.0'
-    //compile 'com.squareup.retrofit2:converter-gson:2.0.1'
 
-    /*//RxJava
-    implementation 'io.reactivex:rxjava:1.1.2'
-    implementation 'io.reactivex:rxandroid:1.1.0'
-    implementation 'com.squareup.retrofit2:adapter-rxjava:2.0.1'
-
-    // Google Room
-    compile "android.arch.persistence.room:runtime:$room_version"
-    annotationProcessor "android.arch.persistence.room:compiler:$room_version"
-    kapt "android.arch.persistence.room:compiler:$room_version"*/
     // Room
     compile 'android.arch.persistence.room:runtime:1.0.0-alpha9'
     compile 'android.arch.persistence.room:rxjava2:1.0.0-alpha9'

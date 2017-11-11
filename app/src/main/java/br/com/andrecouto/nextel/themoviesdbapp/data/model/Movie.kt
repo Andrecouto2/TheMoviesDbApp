@@ -8,25 +8,25 @@ import java.util.*
 import kotlin.collections.ArrayList
 
 @Entity(tableName = "movie")
-class Movie(id: Int?, voteCount: Int?, video: Boolean?, voteAverage: Double?,
-            title: String?, popularity: Double?, posterPath: String?, originalLanguage: String?,
-            originalTitle: String, backdropPath: String?, adult: Boolean?, overview: String?,
-            releaseDate: Date?, homepage: String?, untime: Int?) :Parcelable {
+class Movie(id: Int, voteCount: Int, video: Boolean, voteAverage: Double,
+            title: String, popularity: Double, posterPath: String?, originalLanguage: String?,
+            originalTitle: String, backdropPath: String?, adult: Boolean, overview: String?,
+            releaseDate: Date?, homepage: String?, runtime: Int?) :Parcelable {
 
     @PrimaryKey
-    var id: Int? = 0
+    var id: Int = 0
 
     @SerializedName("vote_count")
-    var voteCount: Int? = 0
+    var voteCount: Int = 0
 
-    var video: Boolean? = false
+    var video: Boolean = false
 
     @SerializedName("vote_average")
-    var voteAverage: Double? = 0.0
+    var voteAverage: Double = 0.0
 
-    var title: String? = ""
+    var title: String = ""
 
-    var popularity: Double? = 0.0
+    var popularity: Double = 0.0
 
     @SerializedName("poster_path")
     var posterPath: String? = ""
@@ -40,7 +40,7 @@ class Movie(id: Int?, voteCount: Int?, video: Boolean?, voteAverage: Double?,
     @SerializedName("backdrop_path")
     var backdropPath: String? = ""
 
-    var adult: Boolean? = false
+    var adult: Boolean = false
 
     var overview: String? = ""
 
@@ -81,17 +81,17 @@ class Movie(id: Int?, voteCount: Int?, video: Boolean?, voteAverage: Double?,
     }
 
     constructor(source: Parcel) : this(
-            source.readValue(Int::class.java.classLoader) as Int?,
-            source.readValue(Int::class.java.classLoader) as Int?,
-            source.readValue(Boolean::class.java.classLoader) as Boolean?,
-            source.readValue(Double::class.java.classLoader) as Double?,
+            source.readValue(Int::class.java.classLoader) as Int,
+            source.readValue(Int::class.java.classLoader) as Int,
+            source.readValue(Boolean::class.java.classLoader) as Boolean,
+            source.readValue(Double::class.java.classLoader) as Double,
             source.readString(),
-            source.readValue(Double::class.java.classLoader) as Double?,
-            source.readString(),
-            source.readString(),
+            source.readValue(Double::class.java.classLoader) as Double,
             source.readString(),
             source.readString(),
-            source.readValue(Boolean::class.java.classLoader) as Boolean?,
+            source.readString(),
+            source.readString(),
+            source.readValue(Boolean::class.java.classLoader) as Boolean,
             source.readString(),
             source.readSerializable() as Date?,
             source.readString(),

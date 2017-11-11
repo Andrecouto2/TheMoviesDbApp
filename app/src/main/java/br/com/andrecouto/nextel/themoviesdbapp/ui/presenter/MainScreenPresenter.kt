@@ -3,42 +3,27 @@ package br.com.andrecouto.nextel.themoviesdbapp.ui.presenter
 import android.content.res.Resources
 import android.util.Log
 import br.com.andrecouto.nextel.themoviesdbapp.data.api.MovieAPI
-import br.com.andrecouto.nextel.themoviesdbapp.data.model.CastResponse
-import br.com.andrecouto.nextel.themoviesdbapp.data.model.Movie
-import br.com.andrecouto.nextel.themoviesdbapp.data.model.MovieResponse
-import br.com.andrecouto.nextel.themoviesdbapp.data.model.VideoResponse
+import br.com.andrecouto.nextel.themoviesdbapp.data.dao.DatabaseManager
+import br.com.andrecouto.nextel.themoviesdbapp.data.model.*
 import javax.inject.Inject;
 import retrofit2.Retrofit;
 import br.com.andrecouto.nextel.themoviesdbapp.ui.contract.MainScreenContract
 import br.com.andrecouto.nextel.themoviesdbapp.util.Constants
-import io.reactivex.Maybe
-import io.reactivex.MaybeObserver
 import io.reactivex.Observer
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
+import org.jetbrains.anko.doAsync
 
 class MainScreenPresenter @Inject
-constructor(retrofit: Retrofit, dView: MainScreenContract.View,
-            pnMoviesView: MainScreenContract.PlayingNowMoviesView,
-            dMoviesView: MainScreenContract.DetailsMovieView,
-            vMoviesView: MainScreenContract.VideosMovieView,
-            cMoviesView: MainScreenContract.CastsMovieView) : MainScreenContract.Presenter {
+constructor(retrofit: Retrofit, dView: MainScreenContract.MainView) : MainScreenContract.Presenter {
 
     var retrofit: Retrofit
-    internal var dView: MainScreenContract.View
-    internal var pnMoviesView: MainScreenContract.PlayingNowMoviesView
-    internal var dMoviesView: MainScreenContract.DetailsMovieView
-    internal var vMoviesView: MainScreenContract.VideosMovieView
-    internal var cMoviesView: MainScreenContract.CastsMovieView
+    internal var dView: MainScreenContract.MainView
 
     init {
         this.retrofit = retrofit
         this.dView = dView
-        this.pnMoviesView = pnMoviesView
-        this.dMoviesView = dMoviesView
-        this.vMoviesView = vMoviesView
-        this.cMoviesView = cMoviesView
     }
 
     override fun loadMovies(page: Int) {
@@ -54,11 +39,11 @@ constructor(retrofit: Retrofit, dView: MainScreenContract.View,
                     }
 
                     override fun onNext(t: MovieResponse) {
-                        pnMoviesView.showMovies(t)
+                        dView.showMovies(t)
                     }
 
                     override fun onSubscribe(d: Disposable) {
-                       dView.onSubscribe(d)
+                        Log.e("onSubscribe", d.toString())
                     }
 
                     override fun onComplete() {
@@ -74,8 +59,8 @@ constructor(retrofit: Retrofit, dView: MainScreenContract.View,
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .unsubscribeOn(Schedulers.io())
-                .subscribe({movies: Movie? ->
-                    dMoviesView.showDetailsMovie(movies)
+                .subscribe({ movie: Movie ->
+                    dView.showDetailsMovie(movie)
                 })
 
     }
@@ -85,8 +70,8 @@ constructor(retrofit: Retrofit, dView: MainScreenContract.View,
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .unsubscribeOn(Schedulers.io())
-                .subscribe({casts: CastResponse? ->
-                    cMoviesView.showCastsMovies(casts)
+                .subscribe({ casts: CastResponse ->
+                    dView.showCastsMovies(casts)
                 })
     }
 
@@ -95,9 +80,83 @@ constructor(retrofit: Retrofit, dView: MainScreenContract.View,
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .unsubscribeOn(Schedulers.io())
-                .subscribe({videos: VideoResponse? ->
-                    vMoviesView.showVideosMovies(videos)
+                .subscribe({ videos: VideoResponse ->
+                    dView.showVideosMovies(videos)
                 })
+    }
+
+    override fun getLocalDataCountMovie(pagination: Int) {
+        DatabaseManager.getMovieDAO().findAll()?.subscribeOn(Schedulers.io())
+                ?.observeOn(AndroidSchedulers.mainThread())
+                ?.subscribe { listOfMovies ->
+                    dView.onMovieLocalDataCountPage(Math.round((listOfMovies.size / pagination).toDouble()).toInt())
+                }
+    }
+
+    override fun getLocalDataNextMovies(currentPage: Int, pagination: Int) {
+        var start: Int = 0
+        if (currentPage > 1)
+            start = (currentPage - 1) * pagination
+        DatabaseManager.getMovieDAO().findNext(start, pagination)?.subscribeOn(Schedulers.io())
+                ?.observeOn(AndroidSchedulers.mainThread())
+                ?.subscribe { listOfNextMovies ->
+                    dView.onShowNextMovies(listOfNextMovies)
+                }
+    }
+
+    override fun getLocalDataAllMovies() {
+        DatabaseManager.getMovieDAO().findAll()?.subscribeOn(Schedulers.io())
+                ?.observeOn(AndroidSchedulers.mainThread())
+                ?.subscribe { listOfMovies ->
+                    dView.onShowAllMovies(listOfMovies)
+                }
+    }
+
+    override fun getLocalDataMovieWith(moviedId: Int) {
+        DatabaseManager.getMovieDAO().getById(moviedId)?.subscribeOn(Schedulers.io())
+                ?.observeOn(AndroidSchedulers.mainThread())
+                ?.subscribe { movieWith ->
+                    dView.onShowMovieWith(movieWith)
+                }
+    }
+
+    override fun setLocalDataMovies(movies: ArrayList<Movie>) {
+        doAsync {
+            DatabaseManager.getMovieDAO().insert(movies)
+        }
+    }
+
+    override fun setLocalDataCasts(casts: List<Cast>, movieId: Int) {
+        doAsync {
+            for (cast in casts) {
+                cast.movieId = movieId
+                DatabaseManager.getCastDAO().insert(cast)
+            }
+        }
+    }
+
+    override fun setLocalDataGenres(genres: List<Genre>, movieId: Int) {
+        doAsync {
+            for (genre in genres) {
+                genre.movieId = movieId
+                DatabaseManager.getGenreDAO().insert(genre)
+            }
+        }
+    }
+
+    override fun setLocalDataVideos(videos: List<Video>, movieId: Int) {
+        doAsync {
+            for (video in videos) {
+                video.movieId = movieId
+                DatabaseManager.getVideoDAO().insert(video)
+            }
+        }
+    }
+
+    override fun setLocalDataUpdateMovie(movie: Movie) {
+        doAsync {
+            DatabaseManager.getMovieDAO().updateMovie(movie)
+        }
     }
 
 }

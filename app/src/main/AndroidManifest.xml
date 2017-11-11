@@ -41,6 +41,9 @@
         <activity android:name=".ui.activity.DetailsMovieActivity"
             android:parentActivityName=".ui.activity.MainActivity"
             android:theme="@style/DetailsScreen"></activity>
+        <meta-data
+            android:name="io.fabric.ApiKey"
+            android:value="09b422e9642333ee639134190c06578a5ac453a1" />
     </application>
 
 </manifest>

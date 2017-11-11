@@ -15,6 +15,6 @@ class MovieWithCastGenreVideo {
     @Relation(parentColumn = "id", entityColumn = "movieId", entity = Cast::class)
     lateinit var casts: List<Cast>
 
-    @Relation(parentColumn = "id", entityColumn = "movieId", entity = Cast::class)
+    @Relation(parentColumn = "id", entityColumn = "movieId", entity = Genre::class)
     lateinit var genres: List<Genre>
 }

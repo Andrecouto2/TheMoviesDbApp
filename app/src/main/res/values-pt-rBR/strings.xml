@@ -18,4 +18,5 @@
     <string name="genre">Gênero</string>
     <string name="website">Website</string>
     <string name="video">Video</string>
+    <string name="vote_average">Votação Média</string>
 </resources>

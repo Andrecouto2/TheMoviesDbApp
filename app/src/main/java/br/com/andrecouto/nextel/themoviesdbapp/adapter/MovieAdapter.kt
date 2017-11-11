@@ -3,6 +3,7 @@ package br.com.andrecouto.nextel.themoviesdbapp.adapter
 import android.content.Context
 import android.support.annotation.Nullable
 import android.support.v7.widget.RecyclerView
+import android.text.Html
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,7 +11,6 @@ import br.com.andrecouto.nextel.themoviesdbapp.R
 import br.com.andrecouto.nextel.themoviesdbapp.data.model.Movie
 import br.com.andrecouto.nextel.themoviesdbapp.extensions.loadUrl
 import br.com.andrecouto.nextel.themoviesdbapp.util.Constants
-import br.com.andrecouto.nextel.themoviesdbapp.util.DateUtils
 import br.com.andrecouto.nextel.themoviesdbapp.util.NetworkUtils
 import kotlinx.android.synthetic.main.item_movie.view.*
 import kotlinx.android.synthetic.main.item_progress.view.*
@@ -52,7 +52,7 @@ class MovieAdapter(val context: Context, val movies: ArrayList<Movie>, val onCli
             ITEM -> {
                 val view = holder.itemView
                 with(view) {
-                    tMovieYear.setText(DateUtils.formatYearLabel(movie))
+                    tMovieVoteLanguage.setText(Html.fromHtml(context.getString(R.string.vote_and_language, movie.voteAverage!!.toString(), movie.originalLanguage)))
                     tMovieTitle.setText(movie.title)
                     tMovieDesc.setText(movie.overview)
                     moviePoster.loadUrl(Constants.BASE_URL_IMG_150 + movie.posterPath, movieProgress, NetworkUtils.isNetworkAvailable(context))

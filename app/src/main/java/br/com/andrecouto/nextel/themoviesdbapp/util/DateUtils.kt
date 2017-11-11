@@ -7,12 +7,6 @@ import java.util.*
 
 object DateUtils {
 
-    fun formatYearLabel(result: Movie): String {
-        return (result.releaseDate.toString().substring(result.releaseDate.toString().count()-4)
-                + " | "
-                + result.originalLanguage!!.toUpperCase())
-    }
-
     fun formatDateToString(date: Date?):String {
         var s:String = ""
         try

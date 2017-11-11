@@ -26,6 +26,7 @@
             android:paddingBottom="@dimen/default_16dp"
             android:paddingTop="@dimen/default_16dp">
 
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -168,6 +169,31 @@
 
                 <TextView
                     android:id="@+id/tGenre"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/default_16dp"
+                    android:layout_marginTop="@dimen/default_6dp"
+                    android:textSize="@dimen/default_14sp" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/lVoteAverage"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/default_16dp"
+                    android:layout_marginTop="@dimen/default_6dp"
+                    android:text="@string/vote_average"
+                    android:textSize="@dimen/default_14sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/tVoteAverage"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="@dimen/default_16dp"

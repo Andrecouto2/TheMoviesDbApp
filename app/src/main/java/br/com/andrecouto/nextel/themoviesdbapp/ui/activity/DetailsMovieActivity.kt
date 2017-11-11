@@ -18,7 +18,6 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_details_movie.*
 import kotlinx.android.synthetic.main.activity_details_movie_contents.*
-import org.jetbrains.anko.doAsync
 
 class DetailsMovieActivity : AppCompatActivity() {
     val movie by lazy { intent.getParcelableExtra<Movie>("movie") }
@@ -58,6 +57,7 @@ class DetailsMovieActivity : AppCompatActivity() {
                 else
                     tWebsite.setText(movie.homepage)
 
+                tVoteAverage.setText(movie.voteAverage.toString())
             }
 
         }

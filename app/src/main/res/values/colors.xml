@@ -6,5 +6,6 @@
     <color name="background">#EFEFEF</color>
     <color name="placeholder_grey">#AAADC4</color>
     <color name="placeholder_grey_20">#33AAADC4</color>
+    <color name="vote_color">#FF0000</color>
 
 </resources>
