@@ -19,7 +19,7 @@ import br.com.andrecouto.nextel.themoviesdbapp.data.component.DaggerMainScreenCo
 import br.com.andrecouto.nextel.themoviesdbapp.data.model.*
 import br.com.andrecouto.nextel.themoviesdbapp.data.module.MainScreenModule
 import br.com.andrecouto.nextel.themoviesdbapp.ui.contract.MainScreenContract
-import br.com.andrecouto.nextel.themoviesdbapp.ui.pagination.PaginationScrollListener
+import br.com.andrecouto.nextel.themoviesdbapp.ui.listener.PaginationScrollListener
 import br.com.andrecouto.nextel.themoviesdbapp.ui.presenter.MainScreenPresenter
 import br.com.andrecouto.nextel.themoviesdbapp.util.NetworkUtils
 import com.crashlytics.android.Crashlytics
@@ -182,7 +182,7 @@ class MainActivity : AppCompatActivity(), MainScreenContract.MainView {
 
     override fun onShowMovieWith(movieWith: MovieWithCastGenreVideo) {
         if (movieWith.casts.size > 0 || movieWith.genres.size > 0 || movieWith.videos.size > 0) {
-            startActivity<DetailsMovieActivity>("movie" to movieWith)
+            startActivity<DetailsMovieActivity>("movie" to movieWith.movie)
         } else {
             mainProgress.visibility = View.VISIBLE
             mainPresenter.getCastsMovie(movieWith.movie.id)

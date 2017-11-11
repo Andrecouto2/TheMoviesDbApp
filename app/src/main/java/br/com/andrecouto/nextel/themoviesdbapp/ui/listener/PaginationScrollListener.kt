@@ -1,4 +1,4 @@
-package br.com.andrecouto.nextel.themoviesdbapp.ui.pagination
+package br.com.andrecouto.nextel.themoviesdbapp.ui.listener
 
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView

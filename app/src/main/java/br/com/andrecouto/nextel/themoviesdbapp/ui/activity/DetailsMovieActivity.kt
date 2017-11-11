@@ -5,12 +5,20 @@ import android.net.Uri
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
+import br.com.andrecouto.nextel.themoviesdbapp.App
 import br.com.andrecouto.nextel.themoviesdbapp.R
+import br.com.andrecouto.nextel.themoviesdbapp.data.component.DaggerDetailsMovieScreenComponent
 import br.com.andrecouto.nextel.themoviesdbapp.data.dao.DatabaseManager
 import br.com.andrecouto.nextel.themoviesdbapp.data.model.Cast
 import br.com.andrecouto.nextel.themoviesdbapp.data.model.Movie
+import br.com.andrecouto.nextel.themoviesdbapp.data.model.MovieWithCastGenreVideo
+import br.com.andrecouto.nextel.themoviesdbapp.data.module.DetailsMovieScreenModule
+import br.com.andrecouto.nextel.themoviesdbapp.data.module.MainScreenModule
 import br.com.andrecouto.nextel.themoviesdbapp.extensions.loadUrl
 import br.com.andrecouto.nextel.themoviesdbapp.extensions.setupToolbar
+import br.com.andrecouto.nextel.themoviesdbapp.ui.contract.DetailsMovieScreenContract
+import br.com.andrecouto.nextel.themoviesdbapp.ui.presenter.DetailsMovieScreenPresenter
+import br.com.andrecouto.nextel.themoviesdbapp.ui.presenter.MainScreenPresenter
 import br.com.andrecouto.nextel.themoviesdbapp.util.Constants
 import br.com.andrecouto.nextel.themoviesdbapp.util.DateUtils
 import br.com.andrecouto.nextel.themoviesdbapp.util.NetworkUtils
@@ -18,14 +26,21 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_details_movie.*
 import kotlinx.android.synthetic.main.activity_details_movie_contents.*
+import javax.inject.Inject
 
-class DetailsMovieActivity : AppCompatActivity() {
+class DetailsMovieActivity : AppCompatActivity(), DetailsMovieScreenContract.dMovieView {
+
     val movie by lazy { intent.getParcelableExtra<Movie>("movie") }
+    @Inject
+    internal lateinit var dMoviePresenter: DetailsMovieScreenPresenter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_details_movie)
-
+        DaggerDetailsMovieScreenComponent.builder()
+                .netComponent((getApplicationContext() as App).netComponent)
+                .detailsMovieScreenModule(DetailsMovieScreenModule(this))
+                .build().inject(this)
         setupToolbar(R.id.toolbar, movie.title, true)
 
         initViews()
@@ -62,30 +77,30 @@ class DetailsMovieActivity : AppCompatActivity() {
 
         }
 
-        DatabaseManager.getMovieDAO().getById(movie.id!!)?.subscribeOn(Schedulers.io())
-                ?.observeOn(AndroidSchedulers.mainThread())
-                ?.subscribe { movieWith ->
-                    if (movieWith.genres.size > 0)
-                        tGenre.setText(movieWith.genres.first().name)
-                    else
-                        lGenre.visibility = View.GONE
+        dMoviePresenter.getLocalDataMovieWith(movie.id)
+    }
 
-                    if (movieWith.casts.size > 0) {
-                        tCast.setText(movieWith.casts.map { cast: Cast -> cast.name }.toString().replace("[", "").replace("]", ""))
-                    } else {
-                        lCast.visibility = View.GONE
-                    }
+    override fun onShowMovieWith(movieWith: MovieWithCastGenreVideo) {
+        if (movieWith.genres.size > 0)
+            tGenre.setText(movieWith.genres.first().name)
+        else
+            lGenre.visibility = View.GONE
 
-                    if (movieWith.videos.size > 0) {
-                        imgVideo.setOnClickListener {
-                            val url = Constants.BASE_URL_VIDEO + movieWith.videos.first().key
-                            val intent = Intent(Intent.ACTION_VIEW)
-                            intent.setData(Uri.parse(url))
-                            startActivity(intent)
-                        }
-                    } else {
-                        cVideo.visibility = View.GONE
-                    }
-                }
+        if (movieWith.casts.size > 0) {
+            tCast.setText(movieWith.casts.map { cast: Cast -> cast.name }.toString().replace("[", "").replace("]", ""))
+        } else {
+            lCast.visibility = View.GONE
+        }
+
+        if (movieWith.videos.size > 0) {
+            imgVideo.setOnClickListener {
+                val url = Constants.BASE_URL_VIDEO + movieWith.videos.first().key
+                val intent = Intent(Intent.ACTION_VIEW)
+                intent.setData(Uri.parse(url))
+                startActivity(intent)
+            }
+        } else {
+            cVideo.visibility = View.GONE
+        }
     }
 }

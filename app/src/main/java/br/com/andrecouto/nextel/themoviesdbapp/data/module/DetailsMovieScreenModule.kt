@@ -1,5 +1,6 @@
 package br.com.andrecouto.nextel.themoviesdbapp.data.module
 
+
 import br.com.andrecouto.nextel.themoviesdbapp.ui.contract.DetailsMovieScreenContract
 import br.com.andrecouto.nextel.themoviesdbapp.ui.contract.MainScreenContract
 import br.com.andrecouto.nextel.themoviesdbapp.util.CustomScope
@@ -7,19 +8,19 @@ import dagger.Module
 import dagger.Provides
 
 @Module
-class MainScreenModule(dView: MainScreenContract.MainView) {
+class DetailsMovieScreenModule(dMovieView: DetailsMovieScreenContract.dMovieView) {
 
-    private val dView: MainScreenContract.MainView
-
+    private val dMovieView: DetailsMovieScreenContract.dMovieView
 
     init {
-        this.dView = dView
+
+        this.dMovieView = dMovieView
     }
 
     @Provides
     @CustomScope
-    internal fun providesMainScreenContractView(): MainScreenContract.MainView {
-        return dView
+    internal fun providesDetailsMovieContractView(): DetailsMovieScreenContract.dMovieView {
+        return dMovieView
     }
 
 }
