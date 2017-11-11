@@ -1,8 +1,6 @@
 package br.com.andrecouto.nextel.themoviesdbapp.data.module
 
-
 import br.com.andrecouto.nextel.themoviesdbapp.ui.contract.DetailsMovieScreenContract
-import br.com.andrecouto.nextel.themoviesdbapp.ui.contract.MainScreenContract
 import br.com.andrecouto.nextel.themoviesdbapp.util.CustomScope
 import dagger.Module
 import dagger.Provides

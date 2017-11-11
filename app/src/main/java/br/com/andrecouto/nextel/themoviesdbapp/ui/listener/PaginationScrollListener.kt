@@ -3,7 +3,6 @@ package br.com.andrecouto.nextel.themoviesdbapp.ui.listener
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 
-
 abstract class PaginationScrollListener(layoutManager: LinearLayoutManager) : RecyclerView.OnScrollListener() {
     internal var layoutManager: LinearLayoutManager
     abstract val totalPageCount: Int
