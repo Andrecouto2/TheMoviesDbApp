@@ -1,8 +1,6 @@
 package br.com.andrecouto.nextel.themoviesdbapp.data.model
 
-import android.arch.persistence.room.Entity
-import android.arch.persistence.room.Ignore
-import android.arch.persistence.room.PrimaryKey
+import android.arch.persistence.room.*
 import android.os.Parcel
 import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
@@ -13,8 +11,7 @@ import kotlin.collections.ArrayList
 class Movie(id: Int?, voteCount: Int?, video: Boolean?, voteAverage: Double?,
             title: String?, popularity: Double?, posterPath: String?, originalLanguage: String?,
             originalTitle: String, backdropPath: String?, adult: Boolean?, overview: String?,
-            releaseDate: Date?, genreIds: IntArray?, genres: ArrayList<Genre>, homepage: String?,
-            runtime: Int?) :Parcelable {
+            releaseDate: Date?, homepage: String?, untime: Int?) :Parcelable {
 
     @PrimaryKey
     var id: Int? = 0
@@ -51,17 +48,13 @@ class Movie(id: Int?, voteCount: Int?, video: Boolean?, voteAverage: Double?,
     @Ignore
     var releaseDate: Date? = Date()
 
-    @SerializedName("genre_ids")
-    @Ignore
-    var genreIds: IntArray? = intArrayOf()
+    var homepage: String? = ""
+
+    var runtime: Int? = 0
 
     @SerializedName("genres")
     @Ignore
     var genres: ArrayList<Genre> = ArrayList()
-
-    var homepage: String? = ""
-
-    var runtime: Int? = 0
 
     init {
         this.id = id
@@ -77,13 +70,11 @@ class Movie(id: Int?, voteCount: Int?, video: Boolean?, voteAverage: Double?,
         this.adult = adult
         this.overview = overview
         this.releaseDate = releaseDate
-        this.genreIds = genreIds
-        this.genres = genres
         this.homepage = homepage
         this.runtime = runtime
     }
 
-    constructor() : this(0, 0, false, 0.0, "", 0.0, "", "", "", "", false, "", Date(), intArrayOf(), ArrayList(), "", 0)
+    constructor() : this(0, 0, false, 0.0, "", 0.0, "", "", "", "", false, "", Date(), "", 0)
 
     override fun toString(): String {
         return "Movie{title='$title', voteAverage='$voteAverage'}"
@@ -103,8 +94,6 @@ class Movie(id: Int?, voteCount: Int?, video: Boolean?, voteAverage: Double?,
             source.readValue(Boolean::class.java.classLoader) as Boolean?,
             source.readString(),
             source.readSerializable() as Date?,
-            source.createIntArray(),
-            source.createTypedArrayList(Genre.CREATOR),
             source.readString(),
             source.readValue(Int::class.java.classLoader) as Int?
     )
@@ -125,8 +114,6 @@ class Movie(id: Int?, voteCount: Int?, video: Boolean?, voteAverage: Double?,
         writeValue(adult)
         writeString(overview)
         writeSerializable(releaseDate)
-        writeIntArray(genreIds)
-        writeTypedList(genres)
         writeString(homepage)
         writeValue(runtime)
     }

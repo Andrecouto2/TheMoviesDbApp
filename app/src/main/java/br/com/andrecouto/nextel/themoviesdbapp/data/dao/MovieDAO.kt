@@ -3,13 +3,14 @@ package br.com.andrecouto.nextel.themoviesdbapp.data.dao
 import android.arch.persistence.room.*
 import br.com.andrecouto.nextel.themoviesdbapp.data.model.Movie
 import android.arch.persistence.room.Update
+import br.com.andrecouto.nextel.themoviesdbapp.data.model.MovieWithCastGenreVideo
 import io.reactivex.Maybe
 
 @Dao
 interface MovieDAO {
 
     @Query("SELECT * FROM movie where id = :arg0")
-    fun getById(id: Int): Movie?
+    fun getById(id: Int): Maybe<MovieWithCastGenreVideo>
 
     @Query("SELECT * FROM movie order by title asc")
     fun findAll(): Maybe<List<Movie>>

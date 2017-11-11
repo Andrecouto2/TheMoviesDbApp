@@ -13,6 +13,4 @@ interface CastDAO {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insert(cast: Cast)
 
-    @Query("SELECT * FROM cast where movieid = :arg0")
-    fun findAllById(moveId: Int) : Maybe<List<Cast>>
 }

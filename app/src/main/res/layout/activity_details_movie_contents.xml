@@ -64,7 +64,6 @@
             android:orientation="vertical"
             android:paddingBottom="@dimen/default_16dp"
             android:paddingTop="@dimen/default_16dp">
-            <!-- Desc -->
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -109,6 +108,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="@dimen/default_16dp"
+                    android:layout_marginRight="@dimen/default_16dp"
                     android:layout_marginTop="@dimen/default_6dp"
                     android:text="@string/cast"
                     android:textSize="@dimen/default_14sp"
@@ -119,6 +119,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="@dimen/default_16dp"
+                    android:layout_marginRight="@dimen/default_16dp"
                     android:layout_marginTop="@dimen/default_6dp"
                     android:ellipsize="end"
                     android:textSize="@dimen/default_14sp" />
@@ -195,8 +196,12 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="@dimen/default_16dp"
+                    android:layout_marginRight="@dimen/default_16dp"
                     android:layout_marginTop="@dimen/default_6dp"
-                    android:textSize="@dimen/default_14sp" />
+                    android:textSize="@dimen/default_14sp"
+                    android:linksClickable="true"
+                    android:autoLink="web"
+                    />
 
             </LinearLayout>
         </LinearLayout>

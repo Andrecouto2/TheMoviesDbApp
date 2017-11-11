@@ -17,10 +17,7 @@ import br.com.andrecouto.nextel.themoviesdbapp.R
 import br.com.andrecouto.nextel.themoviesdbapp.adapter.MovieAdapter
 import br.com.andrecouto.nextel.themoviesdbapp.data.component.DaggerMainScreenComponent
 import br.com.andrecouto.nextel.themoviesdbapp.data.dao.DatabaseManager
-import br.com.andrecouto.nextel.themoviesdbapp.data.model.CastResponse
-import br.com.andrecouto.nextel.themoviesdbapp.data.model.Movie
-import br.com.andrecouto.nextel.themoviesdbapp.data.model.MovieResponse
-import br.com.andrecouto.nextel.themoviesdbapp.data.model.VideoResponse
+import br.com.andrecouto.nextel.themoviesdbapp.data.model.*
 import br.com.andrecouto.nextel.themoviesdbapp.data.module.MainScreenModule
 import br.com.andrecouto.nextel.themoviesdbapp.ui.contract.MainScreenContract
 import br.com.andrecouto.nextel.themoviesdbapp.ui.pagination.PaginationScrollListener
@@ -29,6 +26,7 @@ import br.com.andrecouto.nextel.themoviesdbapp.util.NetworkUtils
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
+import kotlinx.android.synthetic.main.activity_details_movie_contents.*
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.error_layout.*
 import org.jetbrains.anko.custom.async
@@ -46,7 +44,7 @@ class MainActivity : AppCompatActivity(), MainScreenContract.View,
     @Inject
     internal lateinit var mainPresenter: MainScreenPresenter
     internal lateinit var adapter: MovieAdapter
-    internal lateinit var linearLayoutManager:LinearLayoutManager
+    internal lateinit var linearLayoutManager: LinearLayoutManager
 
     val pagination = 20
     var isLoadingInner = false
@@ -66,11 +64,12 @@ class MainActivity : AppCompatActivity(), MainScreenContract.View,
         mainRecycler.setItemAnimator(DefaultItemAnimator())
         adapter = MovieAdapter(applicationContext, ArrayList()) { onClickMovie(it) }
         mainRecycler.adapter = adapter
-        mainRecycler.addOnScrollListener(object: PaginationScrollListener(linearLayoutManager) {
+        mainRecycler.addOnScrollListener(object : PaginationScrollListener(linearLayoutManager) {
             override val isLastPage: Boolean
                 get() = isLastPageInner
             override val isLoading: Boolean
                 get() = isLoadingInner
+
             override fun loadMoreItems() {
                 if (!isLoadingInner) {
                     loadNextPage()
@@ -78,6 +77,7 @@ class MainActivity : AppCompatActivity(), MainScreenContract.View,
                     currentPage += 1
                 }
             }
+
             override val totalPageCount: Int
                 get() = totalPages
         })
@@ -87,14 +87,13 @@ class MainActivity : AppCompatActivity(), MainScreenContract.View,
             getMovies()
         }
 
-       DatabaseManager.getMovieDAO().findAll()?.subscribeOn(Schedulers.io())
+        DatabaseManager.getMovieDAO().findAll()?.subscribeOn(Schedulers.io())
                 ?.observeOn(AndroidSchedulers.mainThread())
                 ?.subscribe { listOfMovies ->
-                    totalPages = Math.round((listOfMovies.size/pagination).toDouble()).toInt()
+                    totalPages = Math.round((listOfMovies.size / pagination).toDouble()).toInt()
                 }
 
         supportActionBar.apply { title = "" }
-
         getMovies()
     }
 
@@ -108,7 +107,7 @@ class MainActivity : AppCompatActivity(), MainScreenContract.View,
     }
 
     override fun onSubscribe(d: Disposable) {
-           //d.dispose()
+
     }
 
     fun getMovies() {
@@ -134,14 +133,6 @@ class MainActivity : AppCompatActivity(), MainScreenContract.View,
 
                 }
 
-    }
-
-    open fun onClickMovie(movie: Movie) {
-        if (movie.runtime!! > 0 || !NetworkUtils.isNetworkAvailable(this)) {
-            startActivity<DetailsMovieActivity>("movie" to movie)
-        } else {
-            mainPresenter.getCastsMovie(movie.id!!)
-        }
     }
 
     private fun hideErrorView() {
@@ -174,20 +165,40 @@ class MainActivity : AppCompatActivity(), MainScreenContract.View,
         getMovies()
     }
 
+    open fun onClickMovie(movie_: Movie) {
+        if (!NetworkUtils.isNetworkAvailable(this))
+            startActivity<DetailsMovieActivity>("movie" to movie_)
+        DatabaseManager.getMovieDAO().getById(movie_.id!!)?.subscribeOn(Schedulers.io())
+                ?.observeOn(AndroidSchedulers.mainThread())
+                ?.subscribe { movieWith ->
+                    if (movieWith.casts.size > 0 || movieWith.genres.size > 0 || movieWith.videos.size > 0) {
+                        startActivity<DetailsMovieActivity>("movie" to movie_)
+                    } else {
+                        mainProgress.visibility = View.VISIBLE
+                        mainPresenter.getCastsMovie(movie_.id!!)
+                    }
+                }
+    }
+
     override fun showMovies(movies: MovieResponse?) {
         val dao = DatabaseManager.getMovieDAO()
         totalPages = movies!!.totalPages
         doAsync {
             dao.insert(movies!!.movieList)
-            addMovies(movies!!.movieList.filter {movie -> movie.voteAverage!! > 5.0  })
+            addMovies(movies!!.movieList.filter { movie -> movie.voteAverage!! > 5.0 })
         }
     }
 
     override fun showDetailsMovie(movie: Movie?) {
-          doAsync {
-              DatabaseManager.getMovieDAO().updateMovie(movie!!)
-              startActivity<DetailsMovieActivity>("movie" to movie)
-          }
+        doAsync {
+            DatabaseManager.getMovieDAO().updateMovie(movie!!)
+            for (genre in movie!!.genres) {
+                genre.movieId = movie.id!!
+                DatabaseManager.getGenreDAO().insert(genre)
+            }
+            mainProgress.visibility = View.GONE
+        }
+        startActivity<DetailsMovieActivity>("movie" to movie!!)
     }
 
     override fun showCastsMovies(casts: CastResponse?) {

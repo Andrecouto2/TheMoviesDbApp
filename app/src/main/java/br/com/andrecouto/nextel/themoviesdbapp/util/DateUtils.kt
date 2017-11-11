@@ -13,7 +13,7 @@ object DateUtils {
                 + result.originalLanguage!!.toUpperCase())
     }
 
-    fun formatDateToString(date: Date):String {
+    fun formatDateToString(date: Date?):String {
         var s:String = ""
         try
         {

@@ -33,53 +33,54 @@ class DetailsMovieActivity : AppCompatActivity() {
     }
 
     fun initViews() {
-        appBarImg.loadUrl(Constants.BASE_URL_IMG_500 + movie.backdropPath, null, NetworkUtils.isNetworkAvailable(this))
-        imgVideo.loadUrl(Constants.BASE_URL_IMG_500 + movie.backdropPath, null, NetworkUtils.isNetworkAvailable(this))
 
-        if (movie.overview.isNullOrEmpty()) {
-            cDescription.visibility = View.GONE
-        } else {
-            tDesc.setText(movie.overview)
-        }
-        if (movie.releaseDate != null) {
-            tReleaseDate.setText(DateUtils.formatDateToString(movie.releaseDate!!))
-        } else {
-            lReleaseDate.visibility = View.GONE
-        }
-        if (movie.runtime!! > 0) {
-            tRunTime.setText(movie.runtime!!.toString())
-        } else {
-            lRunTime.visibility = View.GONE
-        }
-        if (movie.genres.size > 0) {
-            tGenre.setText(movie.genres.first().name)
-        } else {
-            lGenre.visibility = View.GONE
-        }
-        if (movie.homepage.isNullOrEmpty()) {
-            lWebSite.visibility = View.GONE
-        } else {
-            tWebsite.setText(movie.homepage)
+        movie.let { movie ->
+            if (movie is Movie) {
+                appBarImg.loadUrl(Constants.BASE_URL_IMG_500 + movie.backdropPath, null, NetworkUtils.isNetworkAvailable(this))
+                imgVideo.loadUrl(Constants.BASE_URL_IMG_500 + movie.backdropPath, null, NetworkUtils.isNetworkAvailable(this))
+                if (movie.overview.isNullOrEmpty())
+                    cDescription.visibility = View.GONE
+                else
+                    tDesc.setText(movie.overview)
+
+                if (movie.releaseDate != null)
+                    tReleaseDate.setText(DateUtils.formatDateToString(movie.releaseDate))
+                else
+                    lReleaseDate.visibility = View.GONE
+
+                if (movie.runtime != null && movie.runtime!! > 0)
+                    tRunTime.setText(movie.runtime!!.toString())
+                else
+                    lRunTime.visibility = View.GONE
+
+                if (movie.homepage.isNullOrEmpty())
+                    lWebSite.visibility = View.GONE
+                else
+                    tWebsite.setText(movie.homepage)
+
+            }
+
         }
 
-        DatabaseManager.getCastDAO().findAllById(movie.id!!)?.subscribeOn(Schedulers.io())
+        DatabaseManager.getMovieDAO().getById(movie.id!!)?.subscribeOn(Schedulers.io())
                 ?.observeOn(AndroidSchedulers.mainThread())
-                ?.subscribe { listOfCast ->
-                    if (listOfCast.size > 0) {
-                        tCast.setText(listOfCast.map { cast: Cast -> cast.name }.toString().replace("[", "").replace("]", ""))
+                ?.subscribe { movieWith ->
+                    if (movieWith.genres.size > 0)
+                        tGenre.setText(movieWith.genres.first().name)
+                    else
+                        lGenre.visibility = View.GONE
+
+                    if (movieWith.casts.size > 0) {
+                        tCast.setText(movieWith.casts.map { cast: Cast -> cast.name }.toString().replace("[", "").replace("]", ""))
                     } else {
                         lCast.visibility = View.GONE
                     }
-                }
 
-        DatabaseManager.getVideoDAO().findAllById(movie.id!!)?.subscribeOn(Schedulers.io())
-                ?.observeOn(AndroidSchedulers.mainThread())
-                ?.subscribe { listOfVideo ->
-                    if (listOfVideo.size > 0) {
+                    if (movieWith.videos.size > 0) {
                         imgVideo.setOnClickListener {
-                            val url = Constants.BASE_URL_VIDEO + listOfVideo.first().key
+                            val url = Constants.BASE_URL_VIDEO + movieWith.videos.first().key
                             val intent = Intent(Intent.ACTION_VIEW)
-                            intent.setDataAndType(Uri.parse(url), "video/*")
+                            intent.setData(Uri.parse(url))
                             startActivity(intent)
                         }
                     } else {

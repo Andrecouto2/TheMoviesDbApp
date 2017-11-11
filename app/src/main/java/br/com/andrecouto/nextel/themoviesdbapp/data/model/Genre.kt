@@ -1,25 +1,31 @@
 package br.com.andrecouto.nextel.themoviesdbapp.data.model
 
+import android.arch.persistence.room.ColumnInfo
 import android.arch.persistence.room.Entity
 import android.arch.persistence.room.PrimaryKey
 import android.os.Parcel
 import android.os.Parcelable
+import com.google.gson.annotations.SerializedName
 
-@Entity(tableName = "genre")
+@Entity(tableName = "genres")
 class Genre(genreId: Int, movieId: Int, name: String) : Parcelable {
 
     @PrimaryKey
-    var id: Int = 0
+    @SerializedName("id")
+    @ColumnInfo(name = "id")
+    var genreId: Int = 0
 
     var movieId: Int = 0
 
     var name: String = ""
 
     init {
-        this.id = genreId
+        this.genreId = genreId
         this.movieId = movieId
         this.name = name
     }
+
+    constructor() : this(0, 0, "")
 
     constructor(source: Parcel) : this(
             source.readInt(),
@@ -30,7 +36,7 @@ class Genre(genreId: Int, movieId: Int, name: String) : Parcelable {
     override fun describeContents() = 0
 
     override fun writeToParcel(dest: Parcel, flags: Int) = with(dest) {
-        writeInt(id)
+        writeInt(genreId)
         writeInt(movieId)
         writeString(name)
     }

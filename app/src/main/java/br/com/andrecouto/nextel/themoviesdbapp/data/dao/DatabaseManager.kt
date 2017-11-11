@@ -29,4 +29,8 @@ object DatabaseManager {
     fun getVideoDAO(): VideoDAO {
         return dbInstance.videoDAO()
     }
+
+    fun getGenreDAO(): GenreDAO {
+        return dbInstance.genreDAO()
+    }
 }

@@ -10,7 +10,7 @@
     <string name="search_hint">Pesquisar filmes</string>
     <string name="label_find_movies"><![CDATA[<font size=16> Encontramos </font><font color=#212a37 size=40>%1$s resultados:</font>]]></string>
     <string name="label_find_movies_singular"><![CDATA[<font size=16> Encontramos </font><font color=#212a37 size=40>%1$s resultado:</font>]]></string>
-    <string name="description">Descrição</string>
+    <string name="description">Sinopse</string>
     <string name="information">Informações</string>
     <string name="release_date">Data de lançamento</string>
     <string name="cast">Elenco</string>
