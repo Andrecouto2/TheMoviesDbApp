@@ -10,15 +10,21 @@ import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.SearchView
 import android.text.Html
 import android.view.Menu
+import android.view.View
 import br.com.andrecouto.nextel.themoviesdbapp.App
 import br.com.andrecouto.nextel.themoviesdbapp.R
 import br.com.andrecouto.nextel.themoviesdbapp.adapter.MovieAdapter
 import br.com.andrecouto.nextel.themoviesdbapp.data.component.DaggerSearchScreenComponent
+import br.com.andrecouto.nextel.themoviesdbapp.data.model.CastResponse
 import br.com.andrecouto.nextel.themoviesdbapp.data.model.Movie
+import br.com.andrecouto.nextel.themoviesdbapp.data.model.MovieWithCastGenreVideo
+import br.com.andrecouto.nextel.themoviesdbapp.data.model.VideoResponse
 import br.com.andrecouto.nextel.themoviesdbapp.data.module.SearchScreenModule
 import br.com.andrecouto.nextel.themoviesdbapp.ui.contract.SearchScreenContract
 import br.com.andrecouto.nextel.themoviesdbapp.ui.presenter.SearchScreenPresenter
+import br.com.andrecouto.nextel.themoviesdbapp.util.NetworkUtils
 import br.com.andrecouto.nextel.themoviesdbapp.util.SearchUtils
+import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.activity_search.*
 import org.jetbrains.anko.startActivity
 import java.util.*
@@ -64,7 +70,10 @@ class SearchResultsActivity : AppCompatActivity(), SearchScreenContract.searchVi
     }
 
     open fun onClickMovie(movie: Movie) {
-        startActivity<DetailsMovieActivity>("movie" to movie)
+        if (!NetworkUtils.isNetworkAvailable(this))
+            startActivity<DetailsMovieActivity>("movie" to movie)
+
+        searchPresenter.getLocalDataMovieWith(movie.id)
     }
 
     override fun onQueryTextSubmit(query: String): Boolean {
@@ -77,9 +86,35 @@ class SearchResultsActivity : AppCompatActivity(), SearchScreenContract.searchVi
         return false
     }
 
+    override fun onShowMovieWith(movieWith: MovieWithCastGenreVideo) {
+        if (movieWith.casts.size > 0 || movieWith.genres.size > 0 || movieWith.videos.size > 0) {
+            startActivity<DetailsMovieActivity>("movie" to movieWith.movie)
+        } else {
+            searchProgress.visibility = View.VISIBLE
+            searchPresenter.getCastsMovie(movieWith.movie.id)
+        }
+    }
+
     override fun onShowMovieLile(movies: List<Movie>) {
         adapter.addAll(movies)
         tResultSearch.setText(Html.fromHtml(SearchUtils.getResultSearchString(this, movies.size)))
+    }
+
+    override fun showDetailsMovie(movie: Movie) {
+        searchPresenter.setLocalDataUpdateMovie(movie!!)
+        searchPresenter.setLocalDataGenres(movie!!.genres!!, movie.id)
+        searchProgress.visibility = View.GONE
+        startActivity<DetailsMovieActivity>("movie" to movie!!)
+    }
+
+    override fun showCastsMovies(casts: CastResponse) {
+        searchPresenter.setLocalDataCasts(casts.castList, casts.id)
+        searchPresenter.getVideoMovie(casts!!.id)
+    }
+
+    override fun showVideosMovies(videos: VideoResponse) {
+        searchPresenter.setLocalDataVideos(videos.videoList, videos.id)
+        searchPresenter.getDetailsMovie(videos!!.id)
     }
 
 }

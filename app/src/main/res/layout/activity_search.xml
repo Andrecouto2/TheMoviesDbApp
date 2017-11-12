@@ -1,28 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    tools:context=".ui.activity.SearchResultsActivity">
+    tools:context=".ui.activity.MainActivity">
 
-    <TextView
-        android:id="@+id/tResultSearch"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/label_find_movies"
-        android:layout_marginLeft="@dimen/default_16dp"
-        android:layout_marginRight="@dimen/default_16dp"
-        android:layout_marginTop="@dimen/default_16dp"
-        android:layout_marginBottom="@dimen/default_16dp"
-        android:textSize="@dimen/default_18sp"/>
-
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/searchRecycler"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:clipToPadding="false"
-        android:paddingBottom="@dimen/activity_margin_content" />
+        android:orientation="vertical"
+        tools:context=".ui.activity.SearchResultsActivity">
 
-</LinearLayout>
+        <TextView
+            android:id="@+id/tResultSearch"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/default_16dp"
+            android:layout_marginLeft="@dimen/default_16dp"
+            android:layout_marginRight="@dimen/default_16dp"
+            android:layout_marginTop="@dimen/default_16dp"
+            android:text="@string/label_find_movies"
+            android:textSize="@dimen/default_18sp" />
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/searchRecycler"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:clipToPadding="false"
+            android:paddingBottom="@dimen/activity_margin_content" />
+
+
+    </LinearLayout>
+
+    <ProgressBar
+        android:id="@+id/searchProgress"
+        style="@android:style/Widget.Holo.ProgressBar.Large"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical|center_horizontal"
+        android:indeterminateTint="@color/colorPrimary"
+        android:visibility="invisible" />
+
+</FrameLayout>
