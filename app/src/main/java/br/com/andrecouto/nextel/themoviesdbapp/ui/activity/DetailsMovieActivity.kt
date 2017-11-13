@@ -36,6 +36,7 @@ class DetailsMovieActivity : AppCompatActivity(), DetailsMovieScreenContract.dMo
                 .netComponent((getApplicationContext() as App).netComponent)
                 .detailsMovieScreenModule(DetailsMovieScreenModule(this))
                 .build().inject(this)
+
         setupToolbar(R.id.toolbar, movie.title, true)
 
         initViews()
