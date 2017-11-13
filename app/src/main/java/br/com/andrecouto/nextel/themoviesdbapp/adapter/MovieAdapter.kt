@@ -41,7 +41,7 @@ class MovieAdapter(val context: Context, val movies: ArrayList<Movie>, val onCli
             }
         }
         val v = LayoutInflater
-                .from(context)
+                .from(parent.getContext())
                 .inflate(layout, parent, false)
         return MoviesViewHolder(v)
     }
