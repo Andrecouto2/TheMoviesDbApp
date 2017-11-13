@@ -13,13 +13,11 @@ import org.junit.Rule
 import org.junit.runner.RunWith
 import br.com.andrecouto.nextel.themoviesdbapp.R
 import android.support.test.espresso.action.ViewActions
-import android.support.test.espresso.action.ViewActions.click
 import android.support.test.espresso.assertion.ViewAssertions
 import android.support.test.espresso.matcher.ViewMatchers
 import android.support.test.espresso.matcher.ViewMatchers.isDisplayed
 import android.support.test.filters.LargeTest
 import android.support.v7.widget.RecyclerView
-import android.widget.LinearLayout
 import org.hamcrest.Matchers
 import org.junit.Test
 
