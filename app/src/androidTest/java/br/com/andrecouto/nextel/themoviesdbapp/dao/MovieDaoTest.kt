@@ -16,7 +16,6 @@ import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import java.util.*
-import kotlin.collections.ArrayList
 
 /**
  * Created by andrecouto on 13/11/2017.
